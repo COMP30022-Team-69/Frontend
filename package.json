@@ -2,18 +2,26 @@
   "name": "music-library",
   "version": "1.0.0",
   "description": "",
-  "main": "babel.config.js",
+  "author": "",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "main": "babel.config.js",
   "dependencies": {
+    "@mdi/font": "5.9.55",
+    "roboto-fontface": "*",
     "vue": "^3.3.4",
-    "vue-router": "^4.2.4"
-  }
+    "vue-router": "^4.2.4",
+    "vuetify": "^3.0.0-beta.0",
+    "webfontloader": "^1.0.0"
+  },
+  "devDependencies": {
+    "vue-cli-plugin-vuetify": "~2.5.8",
+    "webpack-plugin-vuetify": "^2.0.0-alpha.0"
+  },
+  "keywords": [],
+  "license": "ISC"
 }

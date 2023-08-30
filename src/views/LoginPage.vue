@@ -1,17 +1,21 @@
 <template>
-    <div>
-      <h1>Login Page</h1>
-      <form @submit.prevent="login">
-        <label for="username">Username:</label>
-        <input type="text" id="username" v-model="username">
-        <label for="password">Password:</label>
-        <input type="password" id="password" v-model="password">
-        <button type="submit">Login</button>
-      </form>
-    </div>
+  <v-container>
+    <v-row>
+      <v-col>
+        <v-row>
+          <v-label text="Username"/>
+          <v-input v-model="username"/>
+        </v-row>
+        <v-row>
+          <v-label text="Password"/>
+          <v-input v-model="password" type="password"/>
+        </v-row>
+      </v-col>
+    </v-row>
+  </v-container>
   </template>
-  
-  <script>
+
+<script>
 export default {
   data() {
     return {
@@ -29,7 +33,7 @@ export default {
   },
 };
 </script>
-  
+
 <style>
 /*暂时随便填的*/
 .container {
