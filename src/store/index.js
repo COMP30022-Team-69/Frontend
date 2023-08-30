@@ -1,10 +1,23 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import {createStore} from 'vuex'
 
-Vue.use(Vuex)
+const state = {
+  // example number
+  num: 1,
+}
 
-export default new Vuex.Store({
-  modules: {
-    // modules
-  }
+const mutations = {
+  // example add number
+  addNum(state,msg){
+    state.num = msg++
+  },
+}
+
+const actions = {
+
+}
+
+export const store = createStore({
+  state,
+  mutations,
+  actions
 })

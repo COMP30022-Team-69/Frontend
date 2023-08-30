@@ -1,21 +1,20 @@
 <template>
-  <v-container>
-    <v-row class="align-self-center">
-      <v-label class="text-h1">Login Page</v-label>
+  <v-layout class="home">
+    <v-row class="d-flex justify-center">
+      <v-col cols="4">
+        <LoginForm class="login_box"/>
+      </v-col>
     </v-row>
-        <v-row>
-          <v-label text="Username"/>
-          <v-text-field v-model="username"/>
-        </v-row>
-        <v-row>
-          <v-label text="Password"/>
-          <v-text-field v-model="password" type="password"/>
-        </v-row>
-  </v-container>
+  </v-layout>
 </template>
 
 <script>
+import LoginForm from "@/components/LoginForm.vue";
+
 export default {
+  components: {
+    LoginForm
+  },
   data() {
     return {
       username: '',
@@ -30,34 +29,22 @@ export default {
 </script>
 
 <style>
-/*暂时随便填的*/
-.container {
-  max-width: 400px;
-  margin: 0 auto;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+.login_box {
+  width: 500px;
+  height: 520px;
+  margin: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 
-label {
-  display: block;
-  margin-bottom: 5px;
-}
-
-input {
+.home {
   width: 100%;
-  padding: 10px;
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-button {
-  background-color: #69b2ff;
-  color: #fff;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+  min-height: 100vh;
+  background: url("public/bg.svg") center center no-repeat;
+  background-size: cover;
+  overflow: auto;
 }
 </style>
