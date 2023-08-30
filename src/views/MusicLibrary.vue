@@ -9,9 +9,9 @@
         @toggle-favorite="handleToggleFavorite"
       />
     </div>
-    <!-- 个人歌单分类区 -->
+    <!-- 个人歌单 -->
     <div>
-      <!-- 个人歌单分类区的代码 -->
+      <!-- 个人歌单的代码 -->
     </div>
   </div>
 </template>
@@ -30,13 +30,13 @@ export default {
   },
   methods: {
     onDragStart(event, music) {
-      // 已有的拖放逻辑
+      // 拖放
     },
     handleRemoveFromPlaylist(id) {
-      // 实现从歌单中删除歌曲的逻辑
+      // 歌单中删除歌曲
     },
     handleToggleFavorite(id) {
-      // 实现标记或取消标记喜爱歌曲的逻辑
+      // 标记或取消标记喜爱歌曲
     },
   },
 };

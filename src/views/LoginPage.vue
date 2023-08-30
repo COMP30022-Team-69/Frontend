@@ -22,9 +22,8 @@ export default {
   methods: {
     async login() {
       try {
-        // 登录逻辑
+        // 登录
       } catch (error) {
-        // 处理错误逻辑
       }
     },
   },
@@ -55,7 +54,7 @@ input {
 }
 
 button {
-  background-color: #007bff;
+  background-color: #69b2ff;
   color: #fff;
   padding: 10px 20px;
   border: none;
