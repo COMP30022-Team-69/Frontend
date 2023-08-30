@@ -1,19 +1,18 @@
 <template>
   <v-container>
-    <v-row>
-      <v-col>
+    <v-row class="align-self-center">
+      <v-label class="text-h1">Login Page</v-label>
+    </v-row>
         <v-row>
           <v-label text="Username"/>
-          <v-input v-model="username"/>
+          <v-text-field v-model="username"/>
         </v-row>
         <v-row>
           <v-label text="Password"/>
-          <v-input v-model="password" type="password"/>
+          <v-text-field v-model="password" type="password"/>
         </v-row>
-      </v-col>
-    </v-row>
   </v-container>
-  </template>
+</template>
 
 <script>
 export default {
@@ -25,10 +24,6 @@ export default {
   },
   methods: {
     async login() {
-      try {
-        // 登录
-      } catch (error) {
-      }
     },
   },
 };
