@@ -57,7 +57,7 @@
         rel="noopener noreferrer"
         target="_blank"
       >
-        Brows as a gust <v-icon icon="mdi-chevron-right"></v-icon>
+        Browse as a guest <v-icon icon="mdi-chevron-right"></v-icon>
       </a>
     </v-card-text>
   </v-card>
