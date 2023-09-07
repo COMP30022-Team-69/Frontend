@@ -1,20 +1,34 @@
 <template>
-  <v-app>
-    <v-app-bar app>
-      <v-toolbar-title>MUSIC LIBRARY</v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-avatar>
-        <img src="url_to_user_avatar" alt="User" />
-      </v-avatar>
-      <v-btn @click="logout" >Log Out</v-btn>
-    </v-app-bar>
-    <v->
-    </v->>
-    <router-view class="mt-10"/>
+  <v-app app>
+    <div>
+      <Appbar v-if="showAppBar"></Appbar>
+      <router-view :class="showAppBar ? 'mt-15' : ''"/>
+    </div>
   </v-app>
-
 </template>
 
-<script setup>
-  //
+<script>
+  import Appbar from "@/components/Appbar.vue";
+
+  export default {
+    components: {
+      Appbar
+    },
+    data() {
+      return {
+        showAppBar: true
+      };
+    },
+    methods: {
+
+    },
+    created() {
+
+    },
+    watch: {
+      $route(to,from) {
+          this.showAppBar = !(to.path === "/user" || to.path === "/login");
+      }
+    }
+  };
 </script>

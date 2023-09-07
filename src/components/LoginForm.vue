@@ -46,6 +46,7 @@
       color="blue"
       size="large"
       variant="tonal"
+      @click="login"
     >
       Log In
     </v-btn>
@@ -73,7 +74,9 @@
       }
     },
     methods: {
-      login(){}
+      login(){
+        this.$router.push({path: '/',})
+      }
     },
   };
 </script>
