@@ -33,17 +33,28 @@ export default {
           songs: [
             { id: 1, title: 'Song A', artist: 'Artist A' },
             { id: 2, title: 'Song B', artist: 'Artist B' },
-            // ... other songs
+            // ... other songs for Favourite
           ]
         },
         'Background': {
           name: 'Background',
           songs: [
             { id: 3, title: 'Song C', artist: 'Artist C' },
-            // ... other songs
+            // ... other songs for Background
           ]
         },
-        // ... other categories like 'Relax', 'Sleep', etc.
+        'Relax': {
+          name: 'Relax',
+          songs: [
+            // ... songs for Relax (you can leave this empty if there are no songs yet)
+          ]
+        },
+        'Sleep': {
+          name: 'Sleep',
+          songs: [
+            // ... songs for Sleep (you can leave this empty if there are no songs yet)
+          ]
+        }
       },
       selectedPlaylist: null
     };
