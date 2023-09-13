@@ -3,6 +3,9 @@ import {createStore} from 'vuex'
 const state = {
   // example number
   num: 1,
+  user: {
+    status: false
+  }
 }
 
 const mutations = {

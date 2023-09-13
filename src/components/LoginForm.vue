@@ -5,9 +5,9 @@
     max-width="448"
     rounded="lg"
   >
-      <v-row  class="d-flex justify-center mb-5">
-        <v-img src="public/undraw_my_password_re_ydq7.svg" max-width="100"></v-img>
-      </v-row>
+    <v-row class="d-flex justify-center mb-5">
+      <v-img src="public/undraw_my_password_re_ydq7.svg" max-width="100"></v-img>
+    </v-row>
 
     <div class="text-subtitle-1 text-medium-emphasis">Account</div>
 
@@ -20,14 +20,14 @@
 
     <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">
       Password
-
       <a
         class="text-caption text-decoration-none text-blue"
         href="#"
         rel="noopener noreferrer"
         target="_blank"
       >
-        Forgot login password?</a>
+        Forgot login password?
+      </a>
     </div>
 
     <v-text-field
@@ -51,6 +51,17 @@
       Log In
     </v-btn>
 
+    <!-- Newly added Register link -->
+    <v-card-text class="text-center">
+      <a
+        class="text-blue text-decoration-none"
+        href="#"
+        @click.prevent="goToRegister"
+      >
+        Don't have an account? Register
+      </a>
+    </v-card-text>
+
     <v-card-text class="text-center">
       <a
         class="text-blue text-decoration-none"
@@ -65,23 +76,42 @@
 </template>
 
 <script>
-  export default {
-    data() {
-      return {
-        visible: false,
-        username: '',
-        password: '',
-      }
+export default {
+  data() {
+    return {
+      visible: false,
+      username: '',
+      password: '',
+    };
+  },
+  methods: {
+    login() {
+      this.$router.push({ path: '/', });
     },
-    methods: {
-      login(){
-        this.$router.push({path: '/',})
-      }
+    goToRegister() {
+      this.$router.push('/register'); // Navigate to the registration page
     },
-  };
+  },
+};
 </script>
 
-
 <style scoped>
+.login_box {
+  width: 500px;
+  height: 540px;
+  margin: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
 
+.home {
+  width: 100%;
+  min-height: 100vh;
+  background: url("public/bg.svg") center center no-repeat;
+  background-size: cover;
+  overflow: auto;
+}
 </style>

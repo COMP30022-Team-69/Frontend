@@ -1,6 +1,6 @@
 import axios from 'axios'
 import api from "@/store/api";
-// import store from "@/store";
+import {store} from "@/store";
 // import snackBar from "@/utils/SnackBar";
 
 // 从localStorage中获取token
@@ -13,7 +13,7 @@ function getUserIdFromToken(token){
         return null;
     }
     let data = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString())
-    return data._id
+    return data.id
 }
 
 // 创建一个axios实例
@@ -38,7 +38,7 @@ function refreshToken() {
         timeout: 300000,
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
-            'Authorization': 'Basic cG9ydGFsOlFEV3F3ZHFXRHF3ZDIzcmYydzRHdjR3cmd2V0VnYnZocjU='
+            'Authorization': 'Basic Y2xpZW50K2ZlRlEjcWZANGcjJCVINDZKNjc='
         }
     })
     return instance.post(
@@ -66,7 +66,7 @@ instance.setToken = (token) => {
 }
 
 instance.setId = (id) => {
-    instance.defaults.headers['_id'] = id
+    instance.defaults.headers['userId'] = id
 }
 
 // 是否正在刷新的标记
@@ -76,7 +76,7 @@ let requests = []
 
 instance.interceptors.request.use(request => {
     if (localStorage.getItem('access_token') != null){
-        request.headers['_id'] = getUserIdFromToken(localStorage.getItem('access_token'))
+        request.headers['userId'] = getUserIdFromToken(localStorage.getItem('access_token'))
     } else {
         refreshToken().then(token => {
             localStorage.setItem('access_token', token)

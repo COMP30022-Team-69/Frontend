@@ -1,11 +1,10 @@
 import axios from "@/js/axios";
 import api from "@/store/api";
 
-function register(username, password, email, func){
+function register(userdata, func){
   axios.post(
     api.USER_REGISTER,
-    {},
-    {username: username, password: password, email: email}
+    userdata
   ).then((res) => {
     console.log(res)
     func(res)
