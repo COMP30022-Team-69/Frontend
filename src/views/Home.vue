@@ -28,6 +28,13 @@ export default {
   data() {
     return {
       playlists: {
+        'Main Library': {
+          name: 'Main Library',
+          songs: [
+            { id: 1, title: 'Song A', artist: 'Artist A' },
+            { id: 2, title: 'Song B', artist: 'Artist B' },
+          ]
+        },
         'Favourite': {
           name: 'Favourite',
           songs: [
