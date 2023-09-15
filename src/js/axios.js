@@ -1,18 +1,24 @@
 import axios from 'axios'
 import api from "@/store/api";
 import {store} from "@/store";
+import router from "@/router";
+import Cookies from "js-cookie";
 // import snackBar from "@/utils/SnackBar";
 
 // 从localStorage中获取token
 function getLocalToken() {
-    return localStorage.getItem('access_token')
+  let accessToken = Cookies.get('access_token');
+  if (accessToken === null || accessToken === 'null'){
+    return store.state.user.token.access;
+  }
+    return accessToken;
 }
 
 function getUserIdFromToken(token){
     if (token === null){
         return null;
     }
-    let data = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString())
+    let data = JSON.parse(atob(token.split('.')[1]))
     return data.id
 }
 
@@ -29,12 +35,11 @@ const instance = axios.create({
 })
 
 function refreshToken() {
-    if (localStorage.getItem('refresh_token') === null || localStorage.getItem('refresh_token') === 'null'){
+    if (Cookies.get('refresh_token') === null || Cookies.get('refresh_token') === 'null'){
         return null;
     }
-    const refreshUrl = api.BASE_URL + api.AUTH_LOGIN + "?grant_type=refresh_token&scope=all&refresh_token="+encodeURIComponent(localStorage.getItem('refresh_token'))
     const instance = axios.create({
-        baseURL: refreshUrl,
+        baseURL: api.BASE_URL,
         timeout: 300000,
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
@@ -42,9 +47,14 @@ function refreshToken() {
         }
     })
     return instance.post(
-        refreshUrl
+      api.AUTH_LOGIN,
+      {
+        grant_type: "refresh_token",
+        refresh_token: Cookies.get('refresh_token'),
+        scope: "all"
+      }
     ).then(result => {
-        localStorage.setItem('refresh_token', result.data.refresh_token)
+        Cookies.set('refresh_token', result.data.refresh_token)
         return result.data.access_token
     }).catch(() => {
         localStorage.removeItem('refresh_token')
@@ -62,7 +72,7 @@ function refreshToken() {
 // 给实例添加一个setToken方法，用于登录后将最新token动态添加到header，同时将token保存在localStorage中
 instance.setToken = (token) => {
     instance.defaults.headers['Authorization'] = 'Bearer ' + token
-    localStorage.setItem('access_token', token)
+    Cookies.set('access_token', token)
 }
 
 instance.setId = (id) => {
@@ -75,12 +85,16 @@ let isRefreshing = false
 let requests = []
 
 instance.interceptors.request.use(request => {
-    if (localStorage.getItem('access_token') != null){
-        request.headers['userId'] = getUserIdFromToken(localStorage.getItem('access_token'))
+    if (Cookies.get('access_token') != null){
+        request.headers['userId'] = getUserIdFromToken(Cookies.get('access_token'))
     } else {
+      if (Cookies.get('refresh_token') == null){
+        this.$router.push('/login')
+        return;
+      }
         refreshToken().then(token => {
-            localStorage.setItem('access_token', token)
-            request.headers['_id'] = getUserIdFromToken(token)
+            Cookies.set('access_token', token)
+            request.headers['userId'] = getUserIdFromToken(token)
         })
     }
     return request
@@ -89,13 +103,13 @@ instance.interceptors.request.use(request => {
 instance.interceptors.response.use(response => {
     return response
 }, error => {
-    if (error.response.status === 401 && localStorage.getItem('refresh_token') !== null) {
+    if (error.response.status === 401 && Cookies.get('refresh_token') !== null) {
         const config = error.config
         if (!isRefreshing) {
             isRefreshing = true
             return refreshToken().then(token => {
                 if (token == null){
-                    this.$router.push('/portal')
+                    router.push('/login')
                     return Promise.reject(error)
                 }
                 instance.setToken(token)
@@ -106,7 +120,7 @@ instance.interceptors.response.use(response => {
                 requests = []
                 return instance(config)
             }).catch(res => {
-                console.error(this.$i18n.t('refresh token error =>'), res)
+                console.error('refresh token error =>', res)
             }).finally(() => {
                 isRefreshing = false
             })

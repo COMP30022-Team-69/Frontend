@@ -27,6 +27,7 @@
       placeholder="Email address"
       prepend-inner-icon="mdi-email-outline"
       variant="outlined"
+      :rules="[rules.required, rules.email]"
     ></v-text-field>
 
     <v-text-field
@@ -35,6 +36,7 @@
       placeholder="Username"
       prepend-inner-icon="mdi-account-outline"
       variant="outlined"
+      :rules="[rules.required]"
     ></v-text-field>
 
     <v-text-field
@@ -45,6 +47,23 @@
       placeholder="Enter your password"
       prepend-inner-icon="mdi-lock-outline"
       variant="outlined"
+      :error="!passwordMatch"
+      :error-messages="!passwordMatch ? 'Passwords do not match' : ''"
+      :rules="[rules.required, rules.counter]"
+      @click:append-inner="visible = !visible"
+    ></v-text-field>
+
+    <v-text-field
+      v-model="rePassword"
+      :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
+      :type="visible ? 'text' : 'password'"
+      density="compact"
+      placeholder="Enter your password"
+      prepend-inner-icon="mdi-lock-outline"
+      variant="outlined"
+      :rules="[rules.required, rules.counter]"
+      :error="!passwordMatch"
+      :error-messages="!passwordMatch ? 'Passwords do not match' : ''"
       @click:append-inner="visible = !visible"
     ></v-text-field>
 
@@ -79,11 +98,21 @@ export default {
   data() {
     return {
       visible: false,
+      passwordMatch: true,
       email: '',
       username: '',
       password: '',
+      rePassword: '',
       errorMessage: '',
       successMessage: '',
+      rules: {
+        required: value => !!value || 'Required.',
+        counter: value => value.length >= 8 || 'Min 8 characters',
+        email: value => {
+          const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+          return pattern.test(value) || 'Invalid e-mail.'
+        },
+      }
     };
   },
   methods: {
@@ -124,6 +153,20 @@ export default {
       this.$router.push('/login'); // Navigate back to the login page
     },
   },
+  watch: {
+    "password":{
+      handler: function (val, oldVal) {
+        this.passwordMatch = val === this.rePassword;
+      },
+      deep: true
+    },
+    "rePassword":{
+      handler: function (val, oldVal) {
+        this.passwordMatch = val === this.password;
+      },
+      deep: true
+    },
+  }
 };
 </script>
 

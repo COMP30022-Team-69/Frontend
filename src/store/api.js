@@ -5,5 +5,6 @@ export default {
 
   AUTH_LOGIN: "/oauth/token",
 
-  USER_REGISTER: "/user/register"
+  USER_REGISTER: "/user/register",
+  USER_GET_BY_ID: "/user/",
 }

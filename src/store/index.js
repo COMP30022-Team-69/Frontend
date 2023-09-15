@@ -4,7 +4,9 @@ const state = {
   // example number
   num: 1,
   user: {
-    status: false
+    status: false,
+    data: {},
+    token: {},
   }
 }
 

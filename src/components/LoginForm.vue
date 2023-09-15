@@ -16,6 +16,9 @@
       placeholder="Email address"
       prepend-inner-icon="mdi-email-outline"
       variant="outlined"
+      :error="wrongPasswordOrUsername"
+      :error-messages="wrongPasswordOrUsername ? 'Wrong password or username' : ''"
+      v-model="username"
     ></v-text-field>
 
     <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">
@@ -37,6 +40,8 @@
       placeholder="Enter your password"
       prepend-inner-icon="mdi-lock-outline"
       variant="outlined"
+      v-model="password"
+      :error="wrongPasswordOrUsername"
       @click:append-inner="visible = !visible"
     ></v-text-field>
     <br>
@@ -47,6 +52,7 @@
       size="large"
       variant="tonal"
       @click="login"
+      :loading="loginLoading"
     >
       Log In
     </v-btn>
@@ -76,17 +82,34 @@
 </template>
 
 <script>
+import user from "@/js/user";
+import {store} from "@/store";
+
 export default {
   data() {
     return {
       visible: false,
       username: '',
       password: '',
+      wrongPasswordOrUsername: false,
+      loginLoading: false,
     };
   },
   methods: {
     login() {
-      this.$router.push({ path: '/', });
+      this.loginLoading = true
+      user.login(this.username, this.password, (res) => {
+        this.loginLoading = false
+          user.getUserById(res.data.id, (userdata) => {
+            store.state.user.data = userdata.data
+          });
+          store.state.user.status = true
+          this.$router.push({ path: '/'});
+      }, error => {
+        this.loginLoading = false
+        console.log(error)
+        this.wrongPasswordOrUsername = true
+      });
     },
     goToRegister() {
       this.$router.push('/register'); // Navigate to the registration page
