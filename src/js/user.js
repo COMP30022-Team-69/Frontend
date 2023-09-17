@@ -48,15 +48,7 @@ function login(username, password, func, error) {
 }
 
 function getUserById(id, func) {
-  axios.create({
-    baseURL: api.BASE_URL,
-    timeout: 300000,
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-      "Authorization": "Bearer " + store.state.user.token.access,
-      "User-Id": id
-    }
-  }).get(
+  myAxios.get(
     api.USER_GET_BY_ID
   ).then((res) => {
     func(res.data)

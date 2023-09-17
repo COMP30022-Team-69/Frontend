@@ -15,7 +15,7 @@ function getLocalToken() {
 }
 
 function getUserIdFromToken(token){
-    if (token === null){
+    if (token === null || token === undefined){
         return null;
     }
     let data = JSON.parse(atob(token.split('.')[1]))
@@ -30,7 +30,6 @@ const instance = axios.create({
         'Content-Type': 'application/json',
         'clientId': api.CLIENT_ID,
         'clientSecret': api.CLIENT_SECRET,
-        'Authorization': 'Bearer ' + getLocalToken(), // headers塞token
     }
 })
 
@@ -76,67 +75,90 @@ instance.setToken = (token) => {
 }
 
 instance.setId = (id) => {
-    instance.defaults.headers['userId'] = id
+    instance.defaults.headers['User-Id'] = id
 }
 
 // 是否正在刷新的标记
-let isRefreshing = false
-// 重试队列，每一项将是一个待执行的函数形式
-let requests = []
+let isRefreshing = false;
+let failedQueue = [];
+const API_URL = api.BASE_URL;
+
+const processQueue = (error, token = null) => {
+  failedQueue.forEach(prom => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(token);
+    }
+  });
+
+  failedQueue = [];
+};
 
 instance.interceptors.request.use(request => {
-    if (Cookies.get('access_token') != null){
-        request.headers['userId'] = getUserIdFromToken(Cookies.get('access_token'))
-    } else {
-      if (Cookies.get('refresh_token') == null){
-        this.$router.push('/login')
-        return;
-      }
-        refreshToken().then(token => {
-            Cookies.set('access_token', token)
-            request.headers['userId'] = getUserIdFromToken(token)
-        })
+    if (Cookies.get('access_token') != null || Cookies.get('access_token') !== undefined){
+        request.headers['User-Id'] = getUserIdFromToken(Cookies.get('access_token'))
+        request.headers['Authorization'] = 'Bearer ' + Cookies.get('access_token')
     }
+    // else {
+    //   if (Cookies.get('refresh_token') == null){
+    //     this.$router.push('/login')
+    //     return;
+    //   }
+    //     refreshToken().then(token => {
+    //         Cookies.set('access_token', token)
+    //         request.headers['User-Id'] = getUserIdFromToken(token)
+    //     })
+    // }
     return request
 })
 
-instance.interceptors.response.use(response => {
-    return response
-}, error => {
-    if (error.response.status === 401 && Cookies.get('refresh_token') !== null) {
-        const config = error.config
-        if (!isRefreshing) {
-            isRefreshing = true
-            return refreshToken().then(token => {
-                if (token == null){
-                    router.push('/login')
-                    return Promise.reject(error)
-                }
-                instance.setToken(token)
-                instance.setId(getUserIdFromToken(token))
-                config.headers['Authorization'] = 'Bearer ' + token
-                // 已经刷新了token，将所有队列中的请求进行重试
-                requests.forEach(cb => cb(token))
-                requests = []
-                return instance(config)
-            }).catch(res => {
-                console.error('refresh token error =>', res)
-            }).finally(() => {
-                isRefreshing = false
-            })
-        } else {
-            // 正在刷新token，将返回一个未执行resolve的promise
-            return new Promise((resolve) => {
-                // 将resolve放进队列，用一个函数形式来保存，等token刷新后直接执行
-                requests.push((token) => {
-                    config.headers['Authorization'] = 'Bearer ' + token
-                    resolve(instance(config))
-                })
-            })
-        }
+instance.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    const originalRequest = error.config;
+
+    if (error.response.status === 401 && !originalRequest._retry) {
+      if (isRefreshing) {
+        return new Promise((resolve, reject) => {
+          failedQueue.push({ resolve, reject });
+        }).then(token => {
+          originalRequest.headers['Authorization'] = 'Bearer ' + token;
+          return api(originalRequest);
+        }).catch(err => Promise.reject(err));
+      }
+
+      originalRequest._retry = true;
+      isRefreshing = true;
+      const refreshToken = localStorage.getItem('refresh_token'); // 或者从其他存储方式中获取
+
+      return new Promise((resolve, reject) => {
+        axios.post(`${API_URL}/token/refresh/`, {
+          refresh_token: refreshToken,
+          client_id: api.CLIENT_ID,
+          client_secret: api.CLIENT_SECRET,
+          grant_type: 'refresh_token'
+        }).then(({ data }) => {
+          localStorage.setItem('access_token', data.access_token);
+          localStorage.setItem('refresh_token', data.refresh_token);
+          api.defaults.headers['Authorization'] = 'Bearer ' + data.access_token;
+          originalRequest.headers['Authorization'] = 'Bearer ' + data.access_token;
+          processQueue(null, data.access_token);
+          resolve(api(originalRequest));
+        }).catch((err) => {
+          processQueue(err, null);
+          reject(err);
+        }).finally(() => {
+          isRefreshing = false;
+        });
+      });
     }
-    return Promise.reject(error)
-})
+
+    return Promise.reject(error);
+  }
+);
 
 export default {
     get: instance.get,
