@@ -7,4 +7,6 @@ export default {
 
   USER_REGISTER: "/user/register",
   USER_GET_BY_ID: "/user/",
+  USER_UPDATE_EMAIL: "/user/update/email",
+  USER_UPDATE_PASSWORD: "/user/update/password",
 }

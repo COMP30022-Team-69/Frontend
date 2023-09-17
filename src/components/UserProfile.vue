@@ -22,7 +22,7 @@
                         Username:
                       </v-col>
                       <v-col>
-                        <v-label>Ling Bao</v-label>
+                        <v-label>{{store.state.user.data.username}}</v-label>
                       </v-col>
                     </v-row>
                     <v-row>
@@ -30,7 +30,7 @@
                         Email:
                       </v-col>
                       <v-col>
-                        <v-label>xxxxxxx@gmail.com</v-label>
+                        <v-label>{{store.state.user.data.email}}</v-label>
                       </v-col>
                     </v-row>
                     <v-row>
@@ -38,7 +38,7 @@
                         Join Date:
                       </v-col>
                       <v-col>
-                        <v-label>19/09/2023</v-label>
+                        <v-label>{{parseDate(store.state.user.data.createTime)}}</v-label>
                       </v-col>
                     </v-row>
                   </v-col>
@@ -52,10 +52,10 @@
                   <v-col>
                     <v-row>
                       <v-col>
-                        <v-btn block color="blue">UPDATE EMAIL</v-btn>
+                        <ChangeEmailDialog />
                       </v-col>
                       <v-col>
-                        <v-btn block color="blue">UPDATE PASSWORD</v-btn>
+                        <ChangePasswordDialog />
                       </v-col>
                     </v-row>
 
@@ -70,18 +70,36 @@
   </v-container>
 </template>
 <script>
+import {store} from "../store";
+import user from "@/js/user";
+import ChangePasswordDialog from "@/components/ChangePasswordDialog.vue";
+import ChangeEmailDialog from "@/components/ChangeEmailDialog.vue";
+
 export default {
+  computed: {
+    store() {
+      return store
+    }
+  },
   components: {
+    ChangePasswordDialog,
+    ChangeEmailDialog
   },
   data() {
     return {
     };
   },
   created() {
+    user.getUserById(store.state.user.data.id, (res) => {
+      store.state.user.data = res.data
+    })
   },
   methods: {
     goback(){
       this.$router.back(-1)
+    },
+    parseDate(date){
+      return new Date(date).toLocaleString()
     }
   },
 };

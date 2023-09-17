@@ -99,17 +99,16 @@ instance.interceptors.request.use(request => {
     if (Cookies.get('access_token') != null || Cookies.get('access_token') !== undefined){
         request.headers['User-Id'] = getUserIdFromToken(Cookies.get('access_token'))
         request.headers['Authorization'] = 'Bearer ' + Cookies.get('access_token')
+    } else {
+      if (Cookies.get('refresh_token') == null){
+        this.$router.push('/login')
+        return;
+      }
+      refreshToken().then(token => {
+          Cookies.set('access_token', token)
+          request.headers['User-Id'] = getUserIdFromToken(token)
+      })
     }
-    // else {
-    //   if (Cookies.get('refresh_token') == null){
-    //     this.$router.push('/login')
-    //     return;
-    //   }
-    //     refreshToken().then(token => {
-    //         Cookies.set('access_token', token)
-    //         request.headers['User-Id'] = getUserIdFromToken(token)
-    //     })
-    // }
     return request
 })
 

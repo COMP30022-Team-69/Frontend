@@ -55,4 +55,26 @@ function getUserById(id, func) {
   })
 }
 
-export default {register, login, getUserById}
+function updateUserEmail(email, func) {
+  myAxios.post(
+    api.USER_UPDATE_EMAIL,
+    {
+      email: email
+    }
+  ).then((res) => {
+    func(res.data)
+  })
+}
+
+function updateUserPassword(password, func) {
+  myAxios.post(
+    api.USER_UPDATE_PASSWORD,
+    {
+      password: password
+    }
+  ).then((res) => {
+    func(res.data)
+  })
+}
+
+export default {register, login, getUserById, updateUserEmail, updateUserPassword}
