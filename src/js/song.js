@@ -15,7 +15,24 @@ function uploadSong(songData, func) {
   });
 }
 
-export default {uploadSong}
+function getSongs(page, size, func) {
+  console.log("getSongs function called");
+  myAxios.get(api.GET_SONGS, {
+    params: {
+      page: page,
+      size: size
+    }
+  })
+    .then((res) => {
+      console.log("API Response:", res.data); // Log the response
+      func(res.data);
+    })
+    .catch((error) => {
+      console.error("Error fetching songs:", error);
+    });
+}
+
+export default {uploadSong, getSongs}
 
 
 

@@ -19,6 +19,7 @@
 <script>
 import Sidebar from "@/components/Sidebar.vue";
 import SongCard from "@/components/SongCard.vue";
+import song from "@/js/song"
 
 export default {
   components: {
@@ -30,10 +31,7 @@ export default {
       playlists: {
         'Main Library': {
           name: 'Main Library',
-          songs: [
-            { id: 1, title: 'Song A', artist: 'Artist A' },
-            { id: 2, title: 'Song B', artist: 'Artist B' },
-          ]
+          songs: []
         },
         'Favourite': {
           name: 'Favourite',
@@ -72,6 +70,24 @@ export default {
       this.selectedPlaylist = playlistNames[index];
     },
     // ... other methods, like logout (if you have them)
+  },
+  mounted() {
+    console.log("Home.vue mounted"); // Log to ensure this lifecycle hook is being called
+
+    const page = 1; // Example: Fetch the first page
+    const size = 10; // Example: Fetch 10 songs per page
+
+    song.getSongs(page, size, (songsFromApi) => {
+      const transformedSongs = songsFromApi.records.map(song => ({
+        id: song.id,
+        title: song.name,
+        artist: song.author,
+        // ... any other properties you want to include
+      }));
+
+      console.log("Transformed Songs:", transformedSongs); // Log the transformed songs
+      this.playlists['Main Library'].songs = transformedSongs;
+    });
   }
 };
 </script>

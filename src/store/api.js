@@ -10,5 +10,6 @@ export default {
   USER_UPDATE_EMAIL: "/user/update/email",
   USER_UPDATE_PASSWORD: "/user/update/password",
 
-  ADD_SONG: "/song/add"
+  ADD_SONG: "/song/add",
+  GET_SONGS: "/song/list"
 }
