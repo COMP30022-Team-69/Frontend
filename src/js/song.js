@@ -32,7 +32,28 @@ function getSongs(page, size, func) {
     });
 }
 
-export default {uploadSong, getSongs}
+function addSongToList(songId, songListName, userId, func) {
+  const data = {
+    songIdList: [songId],
+    songListName: songListName
+  };
+
+  myAxios.post(api.ADD_SONG_TO_LIST, data, {
+    headers: {
+      'User-Id': userId,
+      'Content-Type': 'application/json'
+    }
+  })
+    .then((res) => {
+      console.log(res);
+      func(res);
+    })
+    .catch((error) => {
+      console.error("Error adding song to list:", error);
+    });
+}
+
+export default {uploadSong, getSongs, addSongToList}
 
 
 

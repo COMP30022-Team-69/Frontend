@@ -11,5 +11,6 @@ export default {
   USER_UPDATE_PASSWORD: "/user/update/password",
 
   ADD_SONG: "/song/add",
-  GET_SONGS: "/song/list"
+  GET_SONGS: "/song/list",
+  ADD_SONG_TO_LIST: "/song/addSongToList"
 }
