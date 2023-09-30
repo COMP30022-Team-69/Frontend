@@ -6,7 +6,7 @@
     rounded="lg"
   >
     <v-row class="d-flex justify-center mb-5">
-      <v-img src="public/undraw_my_password_re_ydq7.svg" max-width="100"></v-img>
+      <v-img src="/public/undraw_my_password_re_ydq7.svg" max-width="100"></v-img>
     </v-row>
 
     <div class="text-subtitle-1 text-medium-emphasis">Account</div>

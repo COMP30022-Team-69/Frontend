@@ -9,7 +9,7 @@
           <v-card-text>
             <v-row class="d-flex justify-center mb-5">
               <v-col>
-                <v-img src="undraw_my_password_re_ydq7.svg" max-height="100"></v-img>
+                <v-img src="/public/undraw_my_password_re_ydq7.svg" max-height="100"></v-img>
               </v-col>
             </v-row>
             <v-card class="mb-5" >

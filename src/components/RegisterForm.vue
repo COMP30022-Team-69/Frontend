@@ -6,7 +6,7 @@
     rounded="lg"
   >
     <v-row class="d-flex justify-center mb-5">
-      <v-img src="public/undraw_register.svg" max-width="100"></v-img>
+<!--      <v-img src="/public/undraw_register.svg" max-width="100"></v-img>-->
     </v-row>
 
     <div class="text-subtitle-1 text-medium-emphasis">Create an Account</div>
@@ -117,16 +117,13 @@ export default {
   },
   methods: {
     async register() {
-      console.log("Register method triggered");
       try {
         const userData = {
           email: this.email,
           username: this.username,
           password: this.password,
         };
-        user.register(userData, res=>{
-          res.data.data
-          console.log(res.data.data)
+        user.register(userData, ()=>{
         });
 
         // Clear any previous error message
