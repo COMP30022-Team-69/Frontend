@@ -72,6 +72,7 @@ jobs:
           tag_name: ${{ steps.shorten_commit_hash.outputs.SHORT_COMMIT_HASH }}
           release_name: Release ${{ steps.shorten_commit_hash.outputs.SHORT_COMMIT_HASH }}
           body: Build-${{ steps.shorten_commit_hash.outputs.SHORT_COMMIT_HASH }}
+          token: ${{ secrets.TOKEN }}
 
       - name: Upload Release Asset
         id: upload-release-asset
@@ -83,3 +84,4 @@ jobs:
           asset_path: ./app.zip
           asset_name: app-${{ steps.shorten_commit_hash.outputs.SHORT_COMMIT_HASH }}.zip
           asset_content_type: application/zip
+          token: ${{ secrets.TOKEN }}
