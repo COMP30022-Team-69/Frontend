@@ -1,12 +1,15 @@
-name: FTP Deploy
+name: Build and Deploy App
 
 on:
   push:
     branches:
-      - main
+      - master
+    paths-ignore:
+      - 'README.md'
+      - '.github/**'
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -15,17 +18,57 @@ jobs:
 
       - name: Setup Node.js environment
         uses: actions/setup-node@v3.7.0
+
+      - name: Install Yarn
+        run: npm install -g yarn
+
+      - name: Install Dependencies
+        run: yarn install
+
+      - name: Build
+        run: yarn build
+
+      - name: Deploy
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
-          node-version: '16'
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: "./dist/"
 
-      - name: Install and Build
-        run: |
-          npm install
-          npm run build
+      - name: Compress Build Artifacts
+        run: zip -r app.zip ./dist/*
+        working-directory: ${{ github.workspace }}
 
-      - name: Deploy to FTP
-        run: |
-          sudo apt-get install git-ftp
-          git ftp init --user ${{ secrets.FTP_USERNAME }} --passwd ${{ secrets.FTP_PASSWORD }} ftp://your-ftp-server.com/path/to/deployment
+      - name: Get Latest Commit
+        id: get_latest_commit
+        run: echo "::set-output name=COMMIT_HASH::$(git rev-parse HEAD)"
+        shell: bash
+
+      - name: Shorten Commit Hash
+        id: shorten_commit_hash
+        run: echo "::set-output name=SHORT_COMMIT_HASH::${COMMIT_HASH::7}"
         env:
-          GIT_FTP_INCLUDED: "dist/**"
+          COMMIT_HASH: ${{ steps.get_latest_commit.outputs.COMMIT_HASH }}
+        shell: bash
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.shorten_commit_hash.outputs.SHORT_COMMIT_HASH }}
+          release_name: Release ${{ steps.shorten_commit_hash.outputs.SHORT_COMMIT_HASH }}
+          body: Build-${{ steps.shorten_commit_hash.outputs.SHORT_COMMIT_HASH }}
+
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./app.zip
+          asset_name: app-${{ steps.shorten_commit_hash.outputs.SHORT_COMMIT_HASH }}.zip
+          asset_content_type: application/zip
