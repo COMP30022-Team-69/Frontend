@@ -13,7 +13,6 @@ function register(userdata, func) {
     api.USER_REGISTER,
     userdata
   ).then((res) => {
-    console.log(res)
     func(res)
   })
 }
