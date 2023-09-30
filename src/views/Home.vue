@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import Sidebar from "@/components/Sidebar.vue";
+import Sidebar from "@/components/SideBar.vue";
 import SongCard from "@/components/SongCard.vue";
 import song from "@/js/song"
 

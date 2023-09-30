@@ -20,7 +20,7 @@ jobs:
 
       - name: Check if Sidebar.vue exists
         run: |
-          if [[ ! -f "src/components/Sidebar.vue" ]]; then
+          if [[ ! -f "src/components/SideBar.vue" ]]; then
             echo "Error: Sidebar.vue does not exist!"
             exit 1
           else
