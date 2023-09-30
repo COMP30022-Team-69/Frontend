@@ -6,7 +6,7 @@ on:
       - main
     paths-ignore:
       - 'README.md'
-      - '.github/**'
+#      - '.github/**'
 
 jobs:
   build-and-deploy:
@@ -17,6 +17,15 @@ jobs:
         uses: actions/checkout@v4.1.0
         with:
           token: ${{ secrets.TOKEN }}
+
+      - name: Check if Sidebar.vue exists
+        run: |
+          if [[ ! -f "src/components/Sidebar.vue" ]]; then
+            echo "Error: Sidebar.vue does not exist!"
+            exit 1
+          else
+            echo "Sidebar.vue exists."
+          fi
 
       - name: Setup Node.js environment
         uses: actions/setup-node@v3.7.0
