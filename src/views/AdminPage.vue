@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import AdminSidebar from "@/components/AdminSidebar.vue";
+import AdminSidebar from "@/components/AdminSideBar.vue";
 import SongCard from "@/components/SongCard.vue";
 
 export default {
