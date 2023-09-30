@@ -65,7 +65,7 @@ jobs:
         id: create_release
         uses: actions/create-release@v1
         env:
-          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ steps.shorten_commit_hash.outputs.SHORT_COMMIT_HASH }}
           release_name: Release ${{ steps.shorten_commit_hash.outputs.SHORT_COMMIT_HASH }}
@@ -75,7 +75,7 @@ jobs:
         id: upload-release-asset
         uses: actions/upload-release-asset@v1
         env:
-          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./app.zip
