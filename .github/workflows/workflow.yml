@@ -15,8 +15,6 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4.1.0
-        with:
-          token: ${{ secrets.TOKEN }}
 
       - name: Check if Sidebar.vue exists
         run: |
@@ -67,21 +65,19 @@ jobs:
         id: create_release
         uses: actions/create-release@v1
         env:
-          TOKEN: ${{ secrets.TOKEN }}
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ steps.shorten_commit_hash.outputs.SHORT_COMMIT_HASH }}
           release_name: Release ${{ steps.shorten_commit_hash.outputs.SHORT_COMMIT_HASH }}
           body: Build-${{ steps.shorten_commit_hash.outputs.SHORT_COMMIT_HASH }}
-          token: ${{ secrets.TOKEN }}
 
       - name: Upload Release Asset
         id: upload-release-asset
         uses: actions/upload-release-asset@v1
         env:
-          TOKEN: ${{ secrets.TOKEN }}
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./app.zip
           asset_name: app-${{ steps.shorten_commit_hash.outputs.SHORT_COMMIT_HASH }}.zip
           asset_content_type: application/zip
-          token: ${{ secrets.TOKEN }}
