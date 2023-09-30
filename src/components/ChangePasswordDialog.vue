@@ -67,7 +67,13 @@ export default {
         user.login(store.state.user.data.username, this.currentPassword, (res) => {
           user.updateUserPassword(this.newPassword, (res) => {
             SnackBar.Launch("Password changed successfully!");
+            user.getUserById(store.state.user.data._id, (res) => {
+              store.state.user.data = res.data
+            })
             this.dialog = false;
+            this.currentPassword = ""
+            this.newPassword = ""
+            this.confirmPassword = ""
           });
         }, (err) => {
           this.wrongPassword = true
