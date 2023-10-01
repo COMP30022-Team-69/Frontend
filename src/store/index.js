@@ -2,6 +2,8 @@ import {createStore} from 'vuex'
 
 const state = {
   // example number
+  dragStarted: false,
+  viewingLibrary: 'Main Library',
   user: {
     status: false,
     data: {},

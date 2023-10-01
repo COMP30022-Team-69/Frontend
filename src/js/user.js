@@ -46,7 +46,7 @@ function login(username, password, func, error) {
   })
 }
 
-function getUserById(id, func) {
+function getUser(func) {
   myAxios.get(
     api.USER_GET_BY_ID
   ).then((res) => {
@@ -76,4 +76,17 @@ function updateUserPassword(password, func) {
   })
 }
 
-export default {register, login, getUserById, updateUserEmail, updateUserPassword}
+function getAllUser(page, size, func) {
+  myAxios.get(
+    api.GET_ALL_USER,
+    {
+      params: {
+        page: page,
+        size: size
+      }
+    }
+  ).then((res) => {
+    func(res.data)
+  })
+}
+export default {register, login, getUser, updateUserEmail, updateUserPassword, getAllUser}

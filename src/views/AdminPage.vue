@@ -1,85 +1,71 @@
 <template>
   <v-container class="mt-4">
     <v-row>
-      <v-col cols="12" md="3">
-        <!-- AdminSidebar component -->
-        <AdminSidebar :users="users" @selectPlaylist="selectPlaylist" />
-      </v-col>
+      <v-btn flat @click="goback"><v-icon>mdi-arrow-left</v-icon>BACK</v-btn>
+    </v-row>
+    <v-row>
+      <v-col cols="12">
+        <h2>User Management</h2>
+        <v-data-table-server
+          v-model:items-per-page="size"
+          :items="userList"
+          :headers="headers"
+          :items-length="totalItems"
+          :loading="loading"
+          @update:options="loadUsers"
+        >
 
-      <v-col cols="12" md="9">
-        <div v-if="selectedUser && users[selectedUser] && selectedPlaylist && users[selectedUser].playlists[selectedPlaylist]">
-          <h2>{{ selectedUser }} - {{ selectedPlaylist }}</h2>
-          <SongCard v-for="song in users[selectedUser].playlists[selectedPlaylist].songs" :key="song.id" :song="song" />
-        </div>
+        </v-data-table-server>
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
-import AdminSidebar from "@/components/AdminSideBar.vue";
-import SongCard from "@/components/SongCard.vue";
+// import SongCard from "@/components/SongCard.vue";
+import { VDataTableServer } from 'vuetify/labs/VDataTable'
+import user from "@/js/user";
 
 export default {
   components: {
-    AdminSidebar,
-    SongCard
+    VDataTableServer
   },
   data() {
     return {
-      users: {
-        'Alice': {
-          playlists: {
-            'Favourite': {
-              songs: [
-                { id: 1, title: 'Song A', artist: 'Artist A' },
-                { id: 2, title: 'Song B', artist: 'Artist B' },
-              ]
-            },
-            'Background': {
-              songs: [
-                { id: 3, title: 'Song C', artist: 'Artist C' },
-              ]
-            },
-            'Relax': {
-              songs: [
-                { id: 4, title: 'Song D', artist: 'Artist D' },
-              ]
-            },
-            'Sleep': {
-              songs: [
-                { id: 5, title: 'Song E', artist: 'Artist E' },
-              ]
-            }
-          }
-        },
-        'Bob': {
-          playlists: {
-            'Favourite': {
-              songs: [
-                { id: 6, title: 'Song F', artist: 'Artist F' },
-              ]
-            },
-            'Background': {
-              songs: [
-                { id: 7, title: 'Song G', artist: 'Artist G' },
-              ]
-            },
-            // ... other playlists for Bob
-          }
-        },
-        // ... other users and their playlists
-      },
-      selectedUser: null,
-      selectedPlaylist: null
+      page: 1,
+      size: 20,
+      userList: [],
+      search: '',
+      serverItems: [],
+      loading: true,
+      totalItems: 0,
+      headers: [
+        {title: 'id', key: 'id', sortable: false},
+        { title: 'name', key: 'username', sortable: false },
+        { title: 'email', key: 'email', sortable: false },
+        { title: 'Join Time', key: 'createTime', sortable: false },
+      ],
     };
   },
+  created() {
+    this.loadUsers()
+  },
   methods: {
+    goback(){
+      this.$router.back(-1)
+    },
     selectPlaylist(user, playlist) {
       this.selectedUser = user;
       this.selectedPlaylist = playlist;
     },
-    // ... other methods, like logout (if you have them)
+    loadUsers(){
+      this.loading = true
+      user.getAllUser(this.page, this.size, (res) => {
+        this.userList = res.data.records
+        this.totalItems = res.data.total
+        this.loading = false
+      })
+    }
   }
 };
 </script>

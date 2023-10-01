@@ -100,7 +100,7 @@ export default {
       this.loginLoading = true
       user.login(this.username, this.password, (res) => {
         this.loginLoading = false
-          user.getUserById(res.data.id, (userdata) => {
+          user.getUser((userdata) => {
             store.state.user.data = userdata.data
           });
           store.state.user.status = true

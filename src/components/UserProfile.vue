@@ -90,7 +90,7 @@ export default {
     };
   },
   created() {
-    user.getUserById(store.state.user.data.id, (res) => {
+    user.getUser((res) => {
       store.state.user.data = res.data
     })
   },

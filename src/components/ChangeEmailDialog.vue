@@ -36,7 +36,6 @@ export default {
     return {
       dialog: false,
       valid: true,
-      currentEmail: "",
       newEmail: "",
       rules: {
         required: value => !!value || 'required',
@@ -52,7 +51,11 @@ export default {
       if (this.$refs.form.validate()) {
         user.updateUserEmail(this.newEmail, (res) => {
           SnackBar.Launch("Email changed successfully!");
+          user.getUser((res) => {
+            store.state.user.data = res.data
+          })
           this.dialog = false;
+          this.newEmail = "";
         });
       }
     }

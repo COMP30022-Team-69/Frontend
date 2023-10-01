@@ -1,14 +1,11 @@
 import myAxios from "@/js/axios";
 import api from "@/store/api";
-import Cookies from 'js-cookie'
-import {store} from "@/store";
 
 function uploadSong(songData, func) {
   myAxios.post(
     api.ADD_SONG,
     songData
   ).then((res) => {
-    console.log(res);
     func(res);
   }).catch((error) => {
     console.error("Error uploading song:", error);
@@ -16,7 +13,6 @@ function uploadSong(songData, func) {
 }
 
 function getSongs(page, size, func) {
-  console.log("getSongs function called");
   myAxios.get(api.GET_SONGS, {
     params: {
       page: page,
@@ -24,7 +20,6 @@ function getSongs(page, size, func) {
     }
   })
     .then((res) => {
-      console.log("API Response:", res.data); // Log the response
       func(res.data);
     })
     .catch((error) => {
@@ -38,22 +33,34 @@ function addSongToList(songId, songListName, userId, func) {
     songListName: songListName
   };
 
-  myAxios.post(api.ADD_SONG_TO_LIST, data, {
-    headers: {
-      'User-Id': userId,
-      'Content-Type': 'application/json'
-    }
+  myAxios.post(
+    api.ADD_SONG_TO_LIST,
+    data
+  ).then((res) => {
+    func(res);
   })
-    .then((res) => {
-      console.log(res);
-      func(res);
-    })
     .catch((error) => {
       console.error("Error adding song to list:", error);
     });
 }
 
-export default {uploadSong, getSongs, addSongToList}
+function getUserSongList(page, size, list, func){
+  myAxios.post(api.GET_USER_SONG_LIST, {}, {
+    params: {
+      page: page,
+      size: size,
+      songListName: list
+    }
+  })
+    .then((res) => {
+      func(res.data)
+    })
+    .catch((error) => {
+      console.error("Error fetching user song list:", error);
+    });
+}
+
+export default {uploadSong, getSongs, addSongToList, getUserSongList}
 
 
 
