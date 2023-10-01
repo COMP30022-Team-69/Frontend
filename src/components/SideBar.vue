@@ -10,13 +10,16 @@
         @dragleave="handleDragLeave"
         @drop="handleDrop($event, index)"
       >
-        <v-list-item-title :class="greenReady && playlist !== viewingLibrary && playlist !== 'Main Library' ? 'on-drop' : 'not-drop'">{{ playlist }}</v-list-item-title>
+        <v-list-item-title
+          :class="greenReady && playlist !== viewingLibrary && playlist !== 'Main Library' ? 'on-drop' : 'not-drop'">
+          {{ playlist }}
+        </v-list-item-title>
       </v-list-item>
     </v-list>
 
     <v-btn class="upload-btn" @click="showUploadDialog = true" v-show="showUploadButton">Upload</v-btn>
-    <v-btn class="user-btn" @click="gotoAdminPage" v-show="showUploadButton">User</v-btn>
-    <v-btn class="song-btn" @click="gotoAdminPage" v-show="showUploadButton">Song</v-btn>
+    <v-btn class="user-btn" @click="gotoUserManager" v-show="showUploadButton">User</v-btn>
+    <v-btn class="song-btn" @click="gotoSongManager" v-show="showUploadButton">Song</v-btn>
 
     <!-- Upload Dialog -->
     <v-dialog v-model="showUploadDialog" max-width="500px">
@@ -42,6 +45,7 @@ import song from '@/js/song';
 import {store} from "@/store";
 import user from "@/js/user";
 import Cookies from "js-cookie";
+import SnackBar from "@/js/SnackBar";
 
 export default {
   computed: {
@@ -52,11 +56,6 @@ export default {
       return store.state.viewingLibrary
     },
   },
-  watch: {
-    greenReady(newValue, oldValue) {
-      console.log("The count has changed from", oldValue, "to", newValue);
-    }
-  },
   data() {
     return {
       showUploadButton: false,
@@ -65,7 +64,6 @@ export default {
       artist: '',
       releaseDate: new Date().toLocaleString(),
       description: "Song Description"
-      // Add other song details if needed
     };
   },
   props: {
@@ -75,7 +73,7 @@ export default {
     }
   },
   mounted() {
-    if (Cookies.get('access_token') === undefined){
+    if (Cookies.get('access_token') === undefined) {
       this.$router.push('/login')
       return
     }
@@ -89,8 +87,11 @@ export default {
       store.viewingLibrary = this.playlists[index];
       this.$emit('select', index);
     },
-    gotoAdminPage() {
-      this.$router.push('/admin')
+    gotoUserManager() {
+      this.$router.push('/admin/user')
+    },
+    gotoSongManager() {
+      this.$router.push('/admin/song')
     },
     handleUpload() {
       const songData = {
@@ -98,7 +99,6 @@ export default {
         author: this.artist,
         description: this.description,
         releaseDate: this.releaseDate
-        // Add other song details if needed
       };
 
       song.uploadSong(songData, (response) => {
@@ -124,18 +124,14 @@ export default {
       const droppedSong = JSON.parse(event.dataTransfer.getData('text/plain'));
       event.target.style.backgroundColor = '';
 
-      // Assuming you have a way to get the current user's ID
-      const userId = this.$store.state.user.data.id;
-      const songListName = this.playlists[index]; // Assuming playlists is an array of playlist names
+      const userId = this.$route.query.id;
+      const songListName = this.playlists[index];
 
-      // Use the addSongToList function
       song.addSongToList(droppedSong.id, songListName, userId, (response) => {
-        if (response.data.code === 0) {
-          console.log("Song added successfully:", response.data.msg);
-          // Optionally, provide feedback to the user, e.g., using a toast notification
+        if (response.data.code === 200) {
+          SnackBar.Launch("Song added successfully!");
         } else {
-          console.error("Error adding song:", response.data.msg);
-          // Optionally, handle the error, e.g., show an error message to the user
+          SnackBar.Launch("Error adding song:", response.data.msg);
         }
       });
     },

@@ -12,6 +12,14 @@ function getLocalToken() {
   return accessToken;
 }
 
+function getUserId() {
+  let accessToken = Cookies.get('access_token');
+  if (accessToken === null || accessToken === 'null') {
+    return store.state.user.token.access;
+  }
+  return getUserIdFromToken(accessToken);
+}
+
 function getUserIdFromToken(token) {
   if (token === null || token === undefined) {
     return null;
@@ -160,4 +168,5 @@ instance.interceptors.response.use(
 export default {
   get: instance.get,
   post: instance.post,
+  getUserId
 }

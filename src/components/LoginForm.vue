@@ -23,14 +23,14 @@
 
     <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">
       Password
-      <a
-        class="text-caption text-decoration-none text-blue"
-        href="#"
-        rel="noopener noreferrer"
-        target="_blank"
-      >
-        Forgot login password?
-      </a>
+<!--      <a-->
+<!--        class="text-caption text-decoration-none text-blue"-->
+<!--        href="#"-->
+<!--        rel="noopener noreferrer"-->
+<!--        target="_blank"-->
+<!--      >-->
+<!--        Forgot login password?-->
+<!--      </a>-->
     </div>
 
     <v-text-field
@@ -68,16 +68,16 @@
       </a>
     </v-card-text>
 
-    <v-card-text class="text-center">
-      <a
-        class="text-blue text-decoration-none"
-        href="#"
-        rel="noopener noreferrer"
-        target="_blank"
-      >
-        Browse as a guest <v-icon icon="mdi-chevron-right"></v-icon>
-      </a>
-    </v-card-text>
+<!--    <v-card-text class="text-center">-->
+<!--      <a-->
+<!--        class="text-blue text-decoration-none"-->
+<!--        href="#"-->
+<!--        rel="noopener noreferrer"-->
+<!--        target="_blank"-->
+<!--      >-->
+<!--        Browse as a guest <v-icon icon="mdi-chevron-right"></v-icon>-->
+<!--      </a>-->
+<!--    </v-card-text>-->
   </v-card>
 </template>
 
@@ -104,7 +104,7 @@ export default {
             store.state.user.data = userdata.data
           });
           store.state.user.status = true
-          this.$router.push({ path: '/'});
+          this.$router.push({ path: '/', query: {id: store.state.user.data.id}});
       }, error => {
         this.loginLoading = false
         console.log(error)

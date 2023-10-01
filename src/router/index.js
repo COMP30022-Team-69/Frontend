@@ -33,9 +33,14 @@ const routes = [
         component: () => import(/* webpackChunkName: "home" */ '@/views/RegisterPage.vue')
       },
       {
-        path: '/admin',
-        name: 'Admin',
-        component: () => import(/* webpackChunkName: "home" */ '@/views/AdminPage.vue')
+        path: '/admin/user',
+        name: 'User Manager',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/UserManagePage.vue')
+      },
+      {
+        path: '/admin/song',
+        name: 'Song Manager',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/SongManagePage.vue')
       },
     ],
   },

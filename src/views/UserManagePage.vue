@@ -14,7 +14,13 @@
           :loading="loading"
           @update:options="loadUsers"
         >
-
+          <template v-slot:item.actions="{ item }">
+            <v-btn @click="showUpdate(item.raw)">
+              <v-icon>
+                mdi-pencil
+              </v-icon>
+            </v-btn>
+          </template>
         </v-data-table-server>
       </v-col>
     </v-row>
@@ -44,6 +50,7 @@ export default {
         { title: 'name', key: 'username', sortable: false },
         { title: 'email', key: 'email', sortable: false },
         { title: 'Join Time', key: 'createTime', sortable: false },
+        {title: 'Actions', key: 'actions', sortable: false},
       ],
     };
   },
@@ -53,6 +60,9 @@ export default {
   methods: {
     goback(){
       this.$router.back(-1)
+    },
+    showUpdate(user){
+      this.$router.push({path: '/', query: {id: user.id}})
     },
     selectPlaylist(user, playlist) {
       this.selectedUser = user;

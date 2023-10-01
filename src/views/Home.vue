@@ -76,7 +76,7 @@ export default {
         });
         return;
       }
-      song.getUserSongList(this.page, this.size, this.selectedPlaylist, (songsFromApi) => {
+      song.getUserSongListById(this.page, this.size, this.selectedPlaylist, this.$route.query.id, (songsFromApi) => {
         this.playlists[this.selectedPlaylist].songs = songsFromApi.data.records;
       });
     },
@@ -92,7 +92,6 @@ export default {
       this.loading = true;
       this.page ++;
 
-      // 模拟异步加载数据
       song.getSongs(this.page, this.size, (songsFromApi) => {
         this.playlists['Main Library'].songs = [...this.playlists['Main Library'].songs, ...songsFromApi.data.records];
         this.loading = false;

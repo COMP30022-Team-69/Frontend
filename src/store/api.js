@@ -16,4 +16,5 @@ export default {
   ADD_SONG_TO_LIST: "/song/addSongToList",
   GET_USER_SONG_LIST: "/song/userSongList",
   GET_ALL_USER: "/user/list",
+  UPDATE_SONG: "/song/update",
 }
