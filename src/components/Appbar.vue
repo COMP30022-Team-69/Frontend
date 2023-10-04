@@ -2,27 +2,34 @@
   <v-app-bar app>
     <v-toolbar-title>MUSIC LIBRARY</v-toolbar-title>
     <v-spacer></v-spacer>
-    <v-avatar  @click="gotoUserProfile">
-        <v-img src="@/assets/logo.png" alt="User"/>
+    <v-avatar @click="gotoUserProfile">
+      <v-img src="@/assets/logo.png" alt="User"/>
     </v-avatar>
-    <v-btn @click="logout" >Log Out</v-btn>
+    <v-btn @click="logout">Log Out</v-btn>
   </v-app-bar>
 </template>
 
 <script>
-export default {
-  components: {
-  },
-  data() {
-    return {
+import Cookies from "js-cookie";
+import {store} from "@/store";
 
-    };
+export default {
+  components: {},
+  data() {
+    return {};
   },
   methods: {
-    gotoUserProfile(){
+    gotoUserProfile() {
       this.$router.push({path: '/user',})
     },
-    logout(){
+    logout() {
+      Cookies.remove('access_token')
+      Cookies.remove('refresh_token')
+      store.state.user = {
+        status: false,
+        data: {},
+        token: {},
+      }
       this.$router.push({path: '/login',})
     }
   },
