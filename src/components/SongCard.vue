@@ -1,15 +1,25 @@
 <template>
-  <v-card class="mb-2" draggable="true" @dragstart="handleDragStart" @dragend="handleDragEnd">
-    <v-card-title>{{ song.name }}</v-card-title>
+  <v-card class="mb-2 bg-grey-lighten-4" draggable="true" @dragstart="handleDragStart" @dragend="handleDragEnd">
+    <v-card-title>
+      <v-row>
+        <v-col class="d-flex justify-start">
+          {{ song.name }}
+        </v-col>
+        <v-col class="d-flex justify-end" v-if="deletable">
+          <v-btn icon="mdi-close" variant="text" @click="handleDeleteSong"/>
+        </v-col>
+      </v-row>
+
+    </v-card-title>
     <v-card-text>
       <v-row>
         <v-col>
-          Author: {{song.author}}
+          Author: {{ song.author }}
         </v-col>
       </v-row>
       <v-row>
         <v-col>
-          {{song.description}}
+          {{ song.description }}
         </v-col>
       </v-row>
     </v-card-text>
@@ -24,6 +34,10 @@ export default {
     song: {
       type: Object,
       required: true
+    },
+    deletable: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
@@ -38,6 +52,9 @@ export default {
       // Reset any visual feedback
       event.target.style.opacity = '1';
       store.state.dragStarted = false
+    },
+    handleDeleteSong() {
+      this.$emit('deleteSong', this.song.id)
     }
   }
 };

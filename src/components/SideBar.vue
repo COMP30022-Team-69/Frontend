@@ -10,12 +10,8 @@
         @dragleave="handleDragLeave"
         @drop="handleDrop($event, index)"
       >
-        <v-list-item-title v-if="(playlist === 'Trash Bin' || playlist === 'Main Library') && greenReady"
-                           class="on-drop-trash">
-          {{ playlist }}
-        </v-list-item-title>
-        <v-list-item-title v-else-if="playlist !== 'Trash Bin'"
-                           :class="greenReady && playlist !== viewingLibrary && playlist !== 'Main Library' ? 'on-drop' : 'not-drop'">
+        <v-list-item-title
+          :class="greenReady && playlist !== viewingLibrary && playlist !== 'Main Library' ? 'on-drop' : 'not-drop'">
           {{ playlist }}
         </v-list-item-title>
       </v-list-item>
@@ -130,23 +126,13 @@ export default {
 
       const userId = this.$route.query.id;
       const songListName = this.playlists[index];
-      if (songListName === 'Trash Bin') {
-        song.deleteSongToList(droppedSong.id, songListName, userId, (response) => {
-          if (response.data.code === 200) {
-            SnackBar.Launch("Song deleted successfully!");
-          } else {
-            SnackBar.Launch("Error deleting song:", response.data.msg);
-          }
-        });
-      } else {
-        song.addSongToList(droppedSong.id, songListName, userId, (response) => {
-          if (response.data.code === 200) {
-            SnackBar.Launch("Song added successfully!");
-          } else {
-            SnackBar.Launch("Error adding song:", response.data.msg);
-          }
-        });
-      }
+      song.addSongToList(droppedSong.id, songListName, userId, (response) => {
+        if (response.data.code === 200) {
+          SnackBar.Launch("Song added successfully!");
+        } else {
+          SnackBar.Launch("Error adding song:", response.data.msg);
+        }
+      });
     },
   }
 };
@@ -179,13 +165,6 @@ v-list-item:hover {
 }
 
 .not-drop {
-  padding: 10px;
-}
-
-.on-drop-trash {
-  border: 3px solid red;
-  border-radius: 8px;
-  background-color: #ff5656;
   padding: 10px;
 }
 

@@ -3,7 +3,7 @@
     <v-row>
       <v-col cols="12" md="3">
         <!-- Sidebar component -->
-        <Sidebar :playlists="Object.keys(playlists)" @select="selectPlaylist" />
+        <Sidebar :playlists="Object.keys(playlists)" @select="selectPlaylist"/>
       </v-col>
 
       <v-col cols="12">
@@ -17,7 +17,7 @@
           @scroll="handleScroll"
         >
           <template v-slot:default="{ item }">
-            <SongCard :song="item" />
+            <SongCard :song="item" :deletable="selectedPlaylist !== 'Main Library'" @deleteSong="deleteSongFromList"/>
           </template>
         </v-virtual-scroll>
       </v-col>
@@ -29,6 +29,7 @@
 import Sidebar from "@/components/SideBar.vue";
 import SongCard from "@/components/SongCard.vue";
 import song from "@/js/song"
+import SnackBar from "@/js/SnackBar";
 
 export default {
   components: {
@@ -60,20 +61,26 @@ export default {
         'Sleep': {
           name: 'Sleep',
           songs: []
-        },
-        'Trash Bin': {
-          name: 'Trash Bin',
-          songs: []
         }
       },
       selectedPlaylist: 'Main Library'
     };
   },
   methods: {
+    deleteSongFromList(id) {
+      const userId = this.$route.query.id;
+      song.deleteSongToList(id, this.selectedPlaylist, userId, (response) => {
+        if (response.data.code === 200) {
+          SnackBar.Launch("Song deleted successfully!");
+          song.getUserSongListById(this.page, this.size, this.selectedPlaylist, userId, (songsFromApi) => {
+            this.playlists[this.selectedPlaylist].songs = songsFromApi.data.records;
+          });
+        } else {
+          SnackBar.Launch("Error deleting song:", response.data.msg);
+        }
+      });
+    },
     selectPlaylist(index) {
-      if (index === 5){
-        return;
-      }
       const playlistNames = Object.keys(this.playlists);
       this.selectedPlaylist = playlistNames[index];
       this.page = 1;
@@ -88,7 +95,7 @@ export default {
       });
     },
     handleScroll() {
-      const { scrollTop, scrollHeight, clientHeight } = this.$refs.virtualScroll.$el;
+      const {scrollTop, scrollHeight, clientHeight} = this.$refs.virtualScroll.$el;
       const closeToBottom = scrollTop + clientHeight > scrollHeight - 200;
 
       if (closeToBottom && !this.loading) {
@@ -97,7 +104,7 @@ export default {
     },
     loadMore() {
       this.loading = true;
-      this.page ++;
+      this.page++;
 
       song.getSongs(this.page, this.size, (songsFromApi) => {
         this.playlists['Main Library'].songs = [...this.playlists['Main Library'].songs, ...songsFromApi.data.records];

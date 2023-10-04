@@ -6,7 +6,7 @@
     rounded="lg"
   >
     <v-row class="d-flex justify-center mb-5">
-<!--      <v-img src="/public/undraw_register.svg" max-width="100"></v-img>-->
+      <!--      <v-img src="/public/undraw_register.svg" max-width="100"></v-img>-->
     </v-row>
 
     <div class="text-subtitle-1 text-medium-emphasis">Create an Account</div>
@@ -37,6 +37,9 @@
       prepend-inner-icon="mdi-account-outline"
       variant="outlined"
       :rules="[rules.required]"
+      :error="!validated"
+      :error-messages="username === '' ? 'Username is required' : !validated ? 'This username has been taken' : ''"
+      :loading="validationLoading"
     ></v-text-field>
 
     <v-text-field
@@ -74,6 +77,7 @@
       size="large"
       variant="tonal"
       @click="register"
+      :disabled="!validated || !passwordMatch"
     >
       Register
     </v-btn>
@@ -105,6 +109,8 @@ export default {
       rePassword: '',
       errorMessage: '',
       successMessage: '',
+      validated: false,
+      validationLoading: false,
       rules: {
         required: value => !!value || 'Required.',
         counter: value => value.length >= 8 || 'Min 8 characters',
@@ -116,15 +122,13 @@ export default {
     };
   },
   methods: {
-    async register() {
-      try {
-        const userData = {
-          email: this.email,
-          username: this.username,
-          password: this.password,
-        };
-        user.register(userData, ()=>{
-        });
+    register() {
+      const userData = {
+        email: this.email,
+        username: this.username,
+        password: this.password,
+      };
+      user.register(userData, () => {
 
         // Clear any previous error message
         this.errorMessage = '';
@@ -136,28 +140,42 @@ export default {
         setTimeout(() => {
           this.$router.push('/login');
         }, 1000);
-      } catch (error) {
-        // console.error(error);
+      }, (err) => {
+        // console.error(err);
 
         // Clear any previous success message
         this.successMessage = '';
 
         // Set the error message based on the error received or a generic message
         this.errorMessage = 'Registration failed. Please try again.';
-      }
+      });
     },
     goToLogin() {
       this.$router.push('/login'); // Navigate back to the login page
     },
   },
   watch: {
-    "password":{
+    "username":{
+      handler : function (val, oldVal) {
+        this.validationLoading = true
+        if (val === '') {
+          this.validated = false
+          this.validationLoading = false
+          return
+        }
+        user.checkUsernameAvailability(val, (res) => {
+          this.validated = res.data
+          this.validationLoading = false
+        })
+      },
+    },
+    "password": {
       handler: function (val, oldVal) {
         this.passwordMatch = val === this.rePassword;
       },
       deep: true
     },
-    "rePassword":{
+    "rePassword": {
       handler: function (val, oldVal) {
         this.passwordMatch = val === this.password;
       },

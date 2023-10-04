@@ -9,6 +9,7 @@ export default {
   USER_GET_BY_ID: "/user/",
   USER_UPDATE_EMAIL: "/user/update/email",
   USER_UPDATE_PASSWORD: "/user/update/password",
+  CHECK_USERNAME_AVAILABILITY: "/user/check",
 
   ADD_SONG: "/song/add",
   GET_SONGS: "/song/list",

@@ -4,7 +4,7 @@ import api from "@/store/api";
 import Cookies from 'js-cookie'
 import {store} from "@/store";
 
-function register(userdata, func) {
+function register(userdata, func, errFunc) {
   axios.create({
     baseURL: api.BASE_URL,
     timeout: 300000,
@@ -13,7 +13,9 @@ function register(userdata, func) {
     api.USER_REGISTER,
     userdata
   ).then((res) => {
-    func(res)
+    func(res.data)
+  }).catch((err) => {
+    errFunc(err.data.msg)
   })
 }
 
@@ -89,4 +91,12 @@ function getAllUser(page, size, func) {
     func(res.data)
   })
 }
-export default {register, login, getUser, updateUserEmail, updateUserPassword, getAllUser}
+
+function checkUsernameAvailability(username, func) {
+  myAxios.get(
+    api.CHECK_USERNAME_AVAILABILITY + '/' + username
+  ).then((res) => {
+    func(res.data)
+  })
+}
+export default {register, login, getUser, updateUserEmail, updateUserPassword, getAllUser, checkUsernameAvailability}

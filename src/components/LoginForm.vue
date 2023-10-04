@@ -9,11 +9,11 @@
       <v-img src="/public/undraw_my_password_re_ydq7.svg" max-width="100"></v-img>
     </v-row>
 
-    <div class="text-subtitle-1 text-medium-emphasis">Account</div>
+    <div class="text-subtitle-1 text-medium-emphasis">Username</div>
 
     <v-text-field
       density="compact"
-      placeholder="Email address"
+      placeholder="Username"
       prepend-inner-icon="mdi-email-outline"
       variant="outlined"
       :error="wrongPasswordOrUsername"
