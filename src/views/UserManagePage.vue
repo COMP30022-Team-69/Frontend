@@ -1,7 +1,10 @@
 <template>
   <v-container class="mt-4">
     <v-row>
-      <v-btn flat @click="goback"><v-icon>mdi-arrow-left</v-icon>BACK</v-btn>
+      <v-btn flat @click="goback">
+        <v-icon>mdi-arrow-left</v-icon>
+        BACK
+      </v-btn>
     </v-row>
     <v-row>
       <v-col cols="12">
@@ -15,26 +18,36 @@
           @update:options="loadUsers"
         >
           <template v-slot:item.actions="{ item }">
-            <v-btn @click="showUpdate(item.raw)">
-              <v-icon>
-                mdi-pencil
-              </v-icon>
-            </v-btn>
+            <v-btn @click="showUpdate(item.raw)" icon="mdi-pencil" variant="text"/>
+            <v-btn @click="updateUserAuth(item.raw)" icon="mdi-account-key" variant="text"/>
           </template>
         </v-data-table-server>
       </v-col>
     </v-row>
+    <v-dialog v-model="showDialog" max-width="500px">
+      <UserAuth :usr="selected" @close="closeDialog"/>
+    </v-dialog>
   </v-container>
 </template>
 
 <script>
-// import SongCard from "@/components/SongCard.vue";
-import { VDataTableServer } from 'vuetify/labs/VDataTable'
+import {VDataTableServer} from 'vuetify/labs/VDataTable'
 import user from "@/js/user";
+import UserAuth from "@/components/UserAuthForm";
 
 export default {
   components: {
+    UserAuth,
     VDataTableServer
+  },
+  computed: {
+    selected () {
+      if (this.selectedUser == null) return null
+      return {
+        id: this.selectedUser.id,
+        authority: this.selectedUser.authorities[0].authority
+      }
+    }
   },
   data() {
     return {
@@ -45,11 +58,13 @@ export default {
       serverItems: [],
       loading: true,
       totalItems: 0,
+      showDialog: false,
+      selectedUser: null,
       headers: [
         {title: 'id', key: 'id', sortable: false},
-        { title: 'name', key: 'username', sortable: false },
-        { title: 'email', key: 'email', sortable: false },
-        { title: 'Join Time', key: 'createTime', sortable: false },
+        {title: 'name', key: 'username', sortable: false},
+        {title: 'email', key: 'email', sortable: false},
+        {title: 'Join Time', key: 'createTime', sortable: false},
         {title: 'Actions', key: 'actions', sortable: false},
       ],
     };
@@ -58,17 +73,25 @@ export default {
     this.loadUsers()
   },
   methods: {
-    goback(){
+    updateUserAuth(usr){
+      this.selectedUser = usr
+      this.showDialog = true
+    },
+    closeDialog(){
+      this.showDialog = false
+      this.loadUsers()
+    },
+    goback() {
       this.$router.back(-1)
     },
-    showUpdate(user){
+    showUpdate(user) {
       this.$router.push({path: '/', query: {id: user.id}})
     },
     selectPlaylist(user, playlist) {
       this.selectedUser = user;
       this.selectedPlaylist = playlist;
     },
-    loadUsers(){
+    loadUsers() {
       this.loading = true
       user.getAllUser(this.page, this.size, (res) => {
         this.userList = res.data.records

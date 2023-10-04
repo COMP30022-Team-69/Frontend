@@ -19,16 +19,8 @@
         >
           <template v-slot:item.actions="{ item }">
             <v-row>
-              <v-btn class="d-flex mr-2" @click="showUpdate(item.raw)">
-                <v-icon>
-                  mdi-pencil
-                </v-icon>
-              </v-btn>
-              <v-btn class="d-flex mr-2" @click="deleteSong(item.raw)">
-                <v-icon>
-                  mdi-delete
-                </v-icon>
-              </v-btn>
+              <v-btn @click="showUpdate(item.raw)" icon="mdi-pencil" variant="text"/>
+              <v-btn @click="deleteSong(item.raw)" icon="mdi-delete" variant="text"/>
             </v-row>
           </template>
         </v-data-table-server>

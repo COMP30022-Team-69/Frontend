@@ -99,4 +99,38 @@ function checkUsernameAvailability(username, func) {
     func(res.data)
   })
 }
-export default {register, login, getUser, updateUserEmail, updateUserPassword, getAllUser, checkUsernameAvailability}
+
+function updateUserAuthority(userId, authority, func) {
+  myAxios.post(
+    api.UPDATE_USER_AUTHORITY,
+    {
+      authority: authority
+    },
+    {
+      params: {
+        userId: userId
+      }
+    }
+  ).then((res) => {
+    func(res.data)
+  });
+}
+
+function getUserAuthorityFromToken() {
+  if (Cookies.get("access_token") === null) {
+    return null;
+  }
+  let data = JSON.parse(atob(Cookies.get("access_token").split('.')[1]))
+  return data.authorities[0]
+}
+export default {
+  register,
+  login,
+  getUser,
+  updateUserEmail,
+  updateUserPassword,
+  getAllUser,
+  checkUsernameAvailability,
+  updateUserAuthority,
+  getUserAuthorityFromToken
+}
