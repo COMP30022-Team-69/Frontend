@@ -57,12 +57,12 @@ export default {
           description: this.description
         }, () => {
           // Upload successful
-          SnackBar.Launch("Upload successful");
+          SnackBar.Launch("Update successful");
           this.$emit('close')
         }, (err) => {
           // Upload failed
           console.log(err)
-          SnackBar.Launch("Upload Failed");
+          SnackBar.Launch("Update Failed");
         })
       }else{
         // Upload song to server
