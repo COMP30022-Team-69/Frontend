@@ -54,7 +54,32 @@ function addSongToList(songId, songListName, userId, func) {
     });
 }
 
-function getUserSongList(page, size, list, func){
+function deleteSongToList(songId, songListName, userId, func) {
+  const data = {
+    songIdList: [songId],
+    songListName: songListName
+  };
+
+  axios.create({
+    baseURL: api.BASE_URL,
+    timeout: 300000,
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": 'Bearer ' + Cookies.get('access_token'),
+      "User-Id": userId === undefined ? myAxios.getUserId() : userId,
+    }
+  }).post(
+    api.DELETE_SONG_FROM_LIST,
+    data
+  ).then((res) => {
+    func(res);
+  })
+    .catch((error) => {
+      console.error("Error deleting song to list:", error);
+    });
+}
+
+function getUserSongList(page, size, list, func) {
   myAxios.post(api.GET_USER_SONG_LIST, {}, {
     params: {
       page: page,
@@ -70,19 +95,19 @@ function getUserSongList(page, size, list, func){
     });
 }
 
-function updateSong(songData, func){
+function updateSong(songData, func) {
   myAxios.post(
     api.UPDATE_SONG + "/" + songData.id,
     songData
   ).then((res) => {
-      func(res.data)
-    })
+    func(res.data)
+  })
     .catch((error) => {
       console.error("Error updating song:", error);
     });
 }
 
-function getUserSongListById(page, size, list, userId, func){
+function getUserSongListById(page, size, list, userId, func) {
   axios.create({
     baseURL: api.BASE_URL,
     timeout: 300000,
@@ -105,7 +130,25 @@ function getUserSongListById(page, size, list, userId, func){
       console.error("Error fetching user song list:", error);
     });
 }
-export default {uploadSong, getSongs, addSongToList, getUserSongList, updateSong, getUserSongListById}
+
+function deleteSong(id, func) {
+  myAxios.post(
+    api.DELETE_SONG + "/" + id
+  ).then(res => {
+    func(res.data)
+  })
+}
+
+export default {
+  uploadSong,
+  getSongs,
+  addSongToList,
+  getUserSongList,
+  updateSong,
+  getUserSongListById,
+  deleteSong,
+  deleteSongToList
+}
 
 
 

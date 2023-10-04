@@ -18,11 +18,18 @@
           @update:options="loadSongs"
         >
           <template v-slot:item.actions="{ item }">
-            <v-btn @click="showUpdate(item.raw)">
-              <v-icon>
-                mdi-pencil
-              </v-icon>
-            </v-btn>
+            <v-row>
+              <v-btn class="d-flex mr-2" @click="showUpdate(item.raw)">
+                <v-icon>
+                  mdi-pencil
+                </v-icon>
+              </v-btn>
+              <v-btn class="d-flex mr-2" @click="deleteSong(item.raw)">
+                <v-icon>
+                  mdi-delete
+                </v-icon>
+              </v-btn>
+            </v-row>
           </template>
         </v-data-table-server>
       </v-col>
@@ -37,6 +44,7 @@
 import {VDataTableServer} from 'vuetify/labs/VDataTable'
 import SongForm from "@/components/SongForm";
 import song from "@/js/song";
+import SnackBar from "@/js/SnackBar";
 
 export default {
   components: {
@@ -68,11 +76,17 @@ export default {
     this.loadSongs({page: this.page, itemsPerPage: this.size})
   },
   methods: {
-    showUpdate(item){
+    deleteSong(item) {
+      song.deleteSong(item.id, () => {
+        SnackBar.Launch("Song deleted!")
+        this.loadSongs({page: this.page, itemsPerPage: this.size})
+      })
+    },
+    showUpdate(item) {
       this.songSelected = item;
       this.showDialog = true;
     },
-    updateFinish(){
+    updateFinish() {
       this.showDialog = false;
       this.loadSongs({page: this.page, itemsPerPage: this.size})
     },

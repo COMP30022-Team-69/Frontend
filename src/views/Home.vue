@@ -60,6 +60,10 @@ export default {
         'Sleep': {
           name: 'Sleep',
           songs: []
+        },
+        'Trash Bin': {
+          name: 'Trash Bin',
+          songs: []
         }
       },
       selectedPlaylist: 'Main Library'
@@ -67,6 +71,9 @@ export default {
   },
   methods: {
     selectPlaylist(index) {
+      if (index === 5){
+        return;
+      }
       const playlistNames = Object.keys(this.playlists);
       this.selectedPlaylist = playlistNames[index];
       this.page = 1;

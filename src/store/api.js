@@ -14,7 +14,9 @@ export default {
   GET_SONGS: "/song/list",
   GET_SONG_BY_USER_ID: "/song/userSongList",
   ADD_SONG_TO_LIST: "/song/addSongToList",
+  DELETE_SONG_FROM_LIST: "/song/deleteSongFromList",
   GET_USER_SONG_LIST: "/song/userSongList",
   GET_ALL_USER: "/user/list",
   UPDATE_SONG: "/song/update",
+  DELETE_SONG: "/song/delete"
 }
