@@ -30,7 +30,7 @@
     },
     watch: {
       $route(to,from) {
-          this.showAppBar = !(to.path === "/user" || to.path === "/login");
+          this.showAppBar = !(to.path === "/user" || to.path === "/login"|| to.path === "/register");
       }
     }
   };

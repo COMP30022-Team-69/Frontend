@@ -93,7 +93,14 @@ function getAllUser(page, size, func) {
 }
 
 function checkUsernameAvailability(username, func) {
-  myAxios.get(
+  axios.create({
+    baseURL: api.BASE_URL,
+    timeout: 300000,
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Basic Y2xpZW50OmZlRlEjcWZANGcjJCVINDZKNjc="
+    }
+  }).get(
     api.CHECK_USERNAME_AVAILABILITY + '/' + username
   ).then((res) => {
     func(res.data)
