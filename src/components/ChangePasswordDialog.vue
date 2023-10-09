@@ -19,7 +19,7 @@
             ></v-text-field>
             <v-text-field
               v-model="newPassword"
-              :rules="[rules.required, rules.counter]"
+              :rules="[rules.required, rules.counter, rules.counterMax]"
               label="New Password"
               type="password"
             ></v-text-field>
@@ -57,7 +57,8 @@ export default {
       rules: {
         counter: value => value.length >= 8 || 'Min 8 characters',
         required: value => !!value || 'Required',
-        matchPassword: value => value === this.newPassword || 'Passwords do not match'
+        matchPassword: value => value === this.newPassword || 'Passwords do not match',
+        counterMax: value => value.length <=128 || 'Max 128 characters',
       }
     };
   },
@@ -80,6 +81,11 @@ export default {
           SnackBar.Launch(err.response.data.message);
         });
       }
+    }
+  },
+  watch: {
+    currentPassword() {
+      this.wrongPassword = false
     }
   }
 };

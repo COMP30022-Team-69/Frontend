@@ -36,7 +36,7 @@
       placeholder="Username"
       prepend-inner-icon="mdi-account-outline"
       variant="outlined"
-      :rules="[rules.required]"
+      :rules="[rules.required, rules.usernameLength, rules.usernameValue]"
       :error="!validated"
       :error-messages="username === '' ? 'Username is required' : !validated ? 'This username has been taken' : ''"
       :loading="validationLoading"
@@ -52,7 +52,7 @@
       variant="outlined"
       :error="!passwordMatch"
       :error-messages="!passwordMatch ? 'Passwords do not match' : ''"
-      :rules="[rules.required, rules.counter]"
+      :rules="[rules.required, rules.counter, rules.counterMax]"
       @click:append-inner="visible = !visible"
     ></v-text-field>
 
@@ -64,7 +64,7 @@
       placeholder="Enter your password"
       prepend-inner-icon="mdi-lock-outline"
       variant="outlined"
-      :rules="[rules.required, rules.counter]"
+      :rules="[rules.required, rules.counter, rules.counterMax]"
       :error="!passwordMatch"
       :error-messages="!passwordMatch ? 'Passwords do not match' : ''"
       @click:append-inner="visible = !visible"
@@ -112,8 +112,11 @@ export default {
       validated: false,
       validationLoading: false,
       rules: {
+        usernameLength: value => value.length >= 3 || 'Min 3 characters',
+        usernameValue: value => /^[a-zA-Z0-9]+$/.test(value) || 'Only letters and numbers are allowed',
         required: value => !!value || 'Required.',
         counter: value => value.length >= 8 || 'Min 8 characters',
+        counterMax: value => value.length <=128 || 'Max 128 characters',
         email: value => {
           const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
           return pattern.test(value) || 'Invalid e-mail.'
@@ -157,8 +160,12 @@ export default {
   watch: {
     "username":{
       handler : function (val, oldVal) {
+        if (!(/^[a-zA-Z0-9]+$/.test(val))){
+          this.validated = true
+          return
+        }
         this.validationLoading = true
-        if (val === '') {
+        if (val === '' ) {
           this.validated = false
           this.validationLoading = false
           return
