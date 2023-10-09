@@ -1,39 +1,44 @@
 <template>
-    <v-card>
-      <v-card-title>{{update ? 'Update' : 'Upload'}} Song</v-card-title>
-      <v-card-text>
-        <v-text-field label="Song Name" v-model="songName"></v-text-field>
-        <v-text-field label="Artist" v-model="artist"></v-text-field>
-        <v-text-field label="Release Date" v-model="releaseDate"></v-text-field>
-        <v-text-field label="Description" v-model="description"></v-text-field>
-      </v-card-text>
-      <v-card-actions>
-        <v-btn text @click="close">Cancel</v-btn>
-        <v-btn color="primary" @click="handleUpload">{{update ? 'Update' : 'Upload'}}</v-btn>
-      </v-card-actions>
-    </v-card>
+  <v-card>
+    <v-card-title>{{ update ? 'Update' : 'Upload' }} Song</v-card-title>
+    <v-card-text>
+      <v-text-field label="Song Name" v-model="songName" :rules="[rules.required]"></v-text-field>
+      <v-text-field label="Artist" v-model="artist" :rules="[rules.required]"></v-text-field>
+      <v-text-field label="Release Date" v-model="releaseDate" :rules="[rules.date,rules.required]"></v-text-field>
+      <v-text-field label="Description" v-model="description" :rules="[rules.required]"></v-text-field>
+    </v-card-text>
+    <v-card-actions>
+      <v-btn text @click="close">Cancel</v-btn>
+      <v-btn color="primary" @click="handleUpload">{{ update ? 'Update' : 'Upload' }}</v-btn>
+    </v-card-actions>
+  </v-card>
 </template>
 <script>
 import songApi from "@/js/song";
 import SnackBar from "@/js/SnackBar";
+import moment from "moment";
 
 export default {
   data() {
     return {
       songName: '',
       artist: '',
-      releaseDate: new Date().toLocaleString(),
-      description: "Song Description"
+      releaseDate: '',
+      description: "Song Description",
+      rules: {
+        required: value => !!value || 'Required.',
+        date: value => moment(value, 'YYYY-MM-DD', true).isValid() || 'Invalid date format! yyyy-MM-dd'
+      }
     };
   },
   computed: {
-    update(){
+    update() {
       return this.song != null;
     }
   },
   created() {
     console.log(this.song)
-    if (this.song !=null){
+    if (this.song != null) {
       this.songName = this.song.name;
       this.artist = this.song.author;
       this.releaseDate = this.song.releaseDate;
@@ -48,7 +53,7 @@ export default {
   },
   methods: {
     handleUpload() {
-      if (this.song != null){
+      if (this.song != null) {
         songApi.updateSong({
           id: this.song.id,
           name: this.songName,
@@ -64,7 +69,7 @@ export default {
           console.log(err)
           SnackBar.Launch("Update Failed");
         })
-      }else{
+      } else {
         // Upload song to server
         songApi.uploadSong({
           name: this.songName,
@@ -82,7 +87,7 @@ export default {
         })
       }
     },
-    close(){
+    close() {
       this.$emit('close')
     }
   },

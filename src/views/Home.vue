@@ -3,7 +3,7 @@
     <v-row>
       <v-col cols="12" md="3">
         <!-- Sidebar component -->
-        <Sidebar :playlists="Object.keys(playlists)" @select="selectPlaylist"/>
+        <Sidebar :playlists="Object.keys(playlists)" @select="selectPlaylist" @updateLib="initSongs"/>
       </v-col>
 
       <v-col cols="12">
@@ -110,12 +110,15 @@ export default {
         this.playlists['Main Library'].songs = [...this.playlists['Main Library'].songs, ...songsFromApi.data.records];
         this.loading = false;
       });
+    },
+    initSongs(){
+      song.getSongs(this.page, this.size, (songsFromApi) => {
+        this.playlists['Main Library'].songs = songsFromApi.data.records;
+      });
     }
   },
   created() {
-    song.getSongs(this.page, this.size, (songsFromApi) => {
-      this.playlists['Main Library'].songs = songsFromApi.data.records;
-    });
+    this.initSongs();
   }
 };
 </script>

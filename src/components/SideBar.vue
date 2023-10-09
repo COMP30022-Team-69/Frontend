@@ -23,19 +23,7 @@
 
     <!-- Upload Dialog -->
     <v-dialog v-model="showUploadDialog" max-width="500px">
-      <v-card>
-        <v-card-title>Upload Song</v-card-title>
-        <v-card-text>
-          <v-text-field label="Song Name" v-model="songName"></v-text-field>
-          <v-text-field label="Artist" v-model="artist"></v-text-field>
-          <v-text-field label="Release Date" v-model="releaseDate"></v-text-field>
-          <v-text-field label="Description" v-model="description"></v-text-field>
-        </v-card-text>
-        <v-card-actions>
-          <v-btn text @click="showUploadDialog = false">Cancel</v-btn>
-          <v-btn color="primary" @click="handleUpload">Upload</v-btn>
-        </v-card-actions>
-      </v-card>
+      <SongForm @close="addFinish"/>
     </v-dialog>
   </v-navigation-drawer>
 </template>
@@ -46,8 +34,12 @@ import {store} from "@/store";
 import user from "@/js/user";
 import Cookies from "js-cookie";
 import SnackBar from "@/js/SnackBar";
+import SongForm from "@/components/SongForm.vue";
 
 export default {
+  components: {
+    SongForm
+  },
   computed: {
     greenReady() {
       return store.state.dragStarted
@@ -60,10 +52,6 @@ export default {
     return {
       showUploadButton: false,
       showUploadDialog: false,
-      songName: '',
-      artist: '',
-      releaseDate: new Date().toLocaleString(),
-      description: "Song Description"
     };
   },
   props: {
@@ -93,26 +81,9 @@ export default {
     gotoSongManager() {
       this.$router.push('/admin/song')
     },
-    handleUpload() {
-      const songData = {
-        name: this.songName,
-        author: this.artist,
-        description: this.description,
-        releaseDate: this.releaseDate
-      };
-
-      song.uploadSong(songData, (response) => {
-        if (response.data.code === 200) {
-          console.log("Song uploaded successfully:", response.data.msg);
-          this.$emit('songUploaded', songData);
-        } else {
-          console.error("Server error:", response.data.msg);
-        }
-
-        this.songName = '';
-        this.artist = '';
-        this.showUploadDialog = false;
-      });
+    addFinish() {
+      this.showUploadDialog = false;
+      this.$emit('updateLib')
     },
     handleDragEnter(event) {
       event.target.style.backgroundColor = 'rgba(0, 0, 0, 0.1)';
