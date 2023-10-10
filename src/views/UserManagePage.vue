@@ -52,7 +52,7 @@ export default {
   data() {
     return {
       page: 1,
-      size: 20,
+      size: 15,
       userList: [],
       search: '',
       serverItems: [],
@@ -70,7 +70,7 @@ export default {
     };
   },
   created() {
-    this.loadUsers()
+    this.loadUsers({page: this.page, itemsPerPage: this.size})
   },
   methods: {
     updateUserAuth(usr){
@@ -91,9 +91,9 @@ export default {
       this.selectedUser = user;
       this.selectedPlaylist = playlist;
     },
-    loadUsers() {
+    loadUsers({page, itemsPerPage, sortBy}) {
       this.loading = true
-      user.getAllUser(this.page, this.size, (res) => {
+      user.getAllUser(page, itemsPerPage, (res) => {
         this.userList = res.data.records
         this.totalItems = res.data.total
         this.loading = false
