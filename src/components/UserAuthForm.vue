@@ -35,7 +35,7 @@ export default {
   },
   computed: {
     update(){
-      return this.song != null;
+      return this.usr != null;
     }
   },
   created() {
