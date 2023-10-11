@@ -5,7 +5,7 @@ const state = {
   dragStarted: false,
   isMobile: false,
   page: 1,
-  size: 5,
+  size: 20,
   selectedPlaylist: 'Main Library',
   user: {
     status: false,
