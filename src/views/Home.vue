@@ -81,6 +81,7 @@ export default {
     }
   },
   created() {
+    store.state.page = 1;
     this.initSongs();
   }
 };
