@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer app permanent>
+  <v-navigation-drawer app :permanent="showSidebar" :width="160">
     <v-list>
       <v-list-item
         v-for="(playlist, index) in playlists"
@@ -41,6 +41,9 @@ export default {
     SongForm
   },
   computed: {
+    showSidebar(){
+      return !store.state.isMobile
+    },
     greenReady() {
       return store.state.dragStarted
     },
@@ -52,6 +55,7 @@ export default {
     return {
       showUploadButton: false,
       showUploadDialog: false,
+      isMobile: false
     };
   },
   props: {
@@ -69,8 +73,16 @@ export default {
       store.state.user.data = res.data
       this.showUploadButton = res.data.authorities[0].authority === "admin"
     })
+    this.checkScreenSize();
+    window.addEventListener('resize', this.checkScreenSize);
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.checkScreenSize);
   },
   methods: {
+    checkScreenSize() {
+      store.state.isMobile = window.innerWidth <= 768;
+    },
     selectPlaylist(index) {
       store.viewingLibrary = this.playlists[index];
       this.$emit('select', index);
@@ -114,21 +126,21 @@ export default {
   position: absolute;
   bottom: 100px;
   left: 10px;
-  width: 235px;
+  width: 140px;
 }
 
 .user-btn {
   position: absolute;
   bottom: 150px;
   left: 10px;
-  width: 235px;
+  width: 140px;
 }
 
 .song-btn {
   position: absolute;
   bottom: 200px;
   left: 10px;
-  width: 235px;
+  width: 140px;
 }
 
 v-list-item:hover {

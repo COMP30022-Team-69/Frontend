@@ -4,6 +4,7 @@ const state = {
   // example number
   dragStarted: false,
   viewingLibrary: 'Main Library',
+  isMobile: false,
   user: {
     status: false,
     data: {},

@@ -1,6 +1,10 @@
 <template>
   <v-app-bar app>
-    <v-toolbar-title>MUSIC LIBRARY</v-toolbar-title>
+    <v-toolbar-title>
+      <v-btn icon="mdi-menu" @click="openSidebar"/>
+      MUSIC LIBRARY
+    </v-toolbar-title>
+
     <v-spacer></v-spacer>
     <v-avatar @click="gotoUserProfile">
       <v-img src="@/assets/logo.png" alt="User"/>
@@ -19,6 +23,9 @@ export default {
     return {};
   },
   methods: {
+    openSidebar(){
+      store.state.isMobile = !store.state.isMobile;
+    },
     gotoUserProfile() {
       this.$router.push({path: '/user',})
     },

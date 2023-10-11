@@ -104,14 +104,17 @@ export default {
     },
     loadMore() {
       this.loading = true;
-      this.page++;
 
       song.getSongs(this.page, this.size, (songsFromApi) => {
+        if (songsFromApi.data.records.length === 0) {
+          return;
+        }
         this.playlists['Main Library'].songs = [...this.playlists['Main Library'].songs, ...songsFromApi.data.records];
         this.loading = false;
+        this.page++;
       });
     },
-    initSongs(){
+    initSongs() {
       song.getSongs(this.page, this.size, (songsFromApi) => {
         this.playlists['Main Library'].songs = songsFromApi.data.records;
       });
