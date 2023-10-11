@@ -93,11 +93,9 @@ export default {
   },
   watch:{
     selectedPlaylist(newValue, oldValue) {
-      if (newValue !== oldValue) {
-        store.state.page = 1;
-        store.state.playlists[newValue].songs = [];
-        this.loadMore({done: () => {}});
-      }
+      store.state.page = 1;
+      store.state.playlists[newValue].songs = [];
+      this.loadMore({done: () => {}});
     }
   },
   created() {
