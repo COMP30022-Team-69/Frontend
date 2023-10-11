@@ -41,7 +41,7 @@ export default {
     SongForm
   },
   computed: {
-    showSidebar(){
+    showSidebar() {
       return !store.state.isMobile
     },
     greenReady() {
@@ -124,21 +124,21 @@ export default {
 <style scoped>
 .upload-btn {
   position: absolute;
-  bottom: 100px;
+  bottom: 20px;
   left: 10px;
   width: 140px;
 }
 
 .user-btn {
   position: absolute;
-  bottom: 150px;
+  bottom: 70px;
   left: 10px;
   width: 140px;
 }
 
 .song-btn {
   position: absolute;
-  bottom: 200px;
+  bottom: 120px;
   left: 10px;
   width: 140px;
 }

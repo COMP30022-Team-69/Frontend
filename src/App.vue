@@ -1,37 +1,70 @@
 <template>
-  <v-app app>
-    <div>
-      <Appbar v-if="showAppBar"></Appbar>
-      <router-view :class="showAppBar ? 'mt-15' : ''"/>
+  <v-app>
+    <Appbar v-if="showAppBar"></Appbar>
+    <Sidebar :playlists="Object.keys(store.state.playlists)" @select="selectPlaylist" @updateLib="initSongs"/>
+    <v-main class="no-scroll">
+      <router-view/>
       <SnackBar/>
-    </div>
+    </v-main>
   </v-app>
 </template>
 
 <script>
-  import Appbar from "@/components/Appbar.vue";
-  import SnackBar from "@/components/SnackBar.vue";
+import Appbar from "@/components/Appbar.vue";
+import SnackBar from "@/components/SnackBar.vue";
+import Sidebar from "@/components/SideBar.vue";
+import {store} from "@/store";
+import song from "@/js/song";
 
-  export default {
-    components: {
-      Appbar,
-      SnackBar
-    },
-    data() {
-      return {
-        showAppBar: true
-      };
-    },
-    methods: {
-
-    },
-    created() {
-
-    },
-    watch: {
-      $route(to,from) {
-          this.showAppBar = !(to.path === "/user" || to.path === "/login"|| to.path === "/register");
-      }
+export default {
+  computed: {
+    store() {
+      return store
     }
-  };
+  },
+  components: {
+    Sidebar,
+    Appbar,
+    SnackBar
+  },
+  data() {
+    return {
+      showAppBar: true
+    };
+  },
+  methods: {
+    selectPlaylist(index) {
+      const playlistNames = Object.keys(store.state.playlists);
+      store.state.selectedPlaylist = playlistNames[index];
+      store.state.page = 1;
+      if (store.state.selectedPlaylist === 'Main Library') {
+        song.getSongs(store.state.page, store.state.size, (songsFromApi) => {
+          store.state.playlists['Main Library'].songs = songsFromApi.data.records;
+        });
+        return;
+      }
+      song.getUserSongListById(store.state.page, store.state.size, store.state.selectedPlaylist, this.$route.query.id, (songsFromApi) => {
+        store.state.playlists[store.state.selectedPlaylist].songs = songsFromApi.data.records;
+      });
+    },
+    initSongs() {
+      song.getSongs(store.state.page, store.state.size, (songsFromApi) => {
+        store.state.playlists['Main Library'].songs = songsFromApi.data.records;
+      });
+    }
+  },
+  created() {
+
+  },
+  watch: {
+    $route(to, from) {
+      this.showAppBar = !(to.path === "/user" || to.path === "/login" || to.path === "/register");
+    }
+  }
+};
 </script>
+<style>
+.no-scroll {
+  overflow: hidden;
+}
+</style>
