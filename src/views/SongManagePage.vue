@@ -38,6 +38,7 @@ import {VDataTableServer} from 'vuetify/labs/VDataTable'
 import SongForm from "@/components/SongForm";
 import song from "@/js/song";
 import SnackBar from "@/js/SnackBar";
+import {store} from "@/store";
 
 export default {
   components: {

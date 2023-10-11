@@ -42,13 +42,14 @@ export default {
   },
   computed: {
     showSidebar() {
+      if (this.$route.path === '/admin/user' || this.$route.path === '/admin/song') return false
       return !store.state.isMobile
     },
     greenReady() {
       return store.state.dragStarted
     },
     viewingLibrary() {
-      return store.state.viewingLibrary
+      return store.state.selectedPlaylist
     },
   },
   data() {
@@ -84,7 +85,7 @@ export default {
       store.state.isMobile = window.innerWidth <= 768;
     },
     selectPlaylist(index) {
-      store.viewingLibrary = this.playlists[index];
+      store.selectedPlaylist = this.playlists[index];
       this.$emit('select', index);
     },
     gotoUserManager() {

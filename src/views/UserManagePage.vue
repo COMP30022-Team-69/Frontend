@@ -37,6 +37,7 @@
 import {VDataTableServer} from 'vuetify/labs/VDataTable'
 import user from "@/js/user";
 import UserAuth from "@/components/UserAuthForm";
+import {store} from "@/store";
 
 export default {
   components: {

@@ -3,10 +3,9 @@ import {createStore} from 'vuex'
 const state = {
   // example number
   dragStarted: false,
-  viewingLibrary: 'Main Library',
   isMobile: false,
   page: 1,
-  size: 20,
+  size: 5,
   selectedPlaylist: 'Main Library',
   user: {
     status: false,
