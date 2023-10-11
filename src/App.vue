@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <Appbar v-if="showAppBar"></Appbar>
-    <Sidebar :playlists="Object.keys(store.state.playlists)" @select="selectPlaylist" @updateLib="initSongs"/>
+    <Sidebar :playlists="Object.keys(store.state.playlists)" @select="selectPlaylist" @updateLib="initSongs" v-if="showAppBar"/>
     <v-main class="no-scroll">
       <router-view/>
       <SnackBar/>
