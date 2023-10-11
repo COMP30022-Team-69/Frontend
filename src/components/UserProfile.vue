@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row class="d-flex justify-center">
-      <v-col cols="8">
+      <v-col cols="12" md="8" sm="12" lg="8">
         <v-card>
           <v-card-title>
             <v-btn flat @click="goback"><v-icon>mdi-arrow-left</v-icon>BACK</v-btn>

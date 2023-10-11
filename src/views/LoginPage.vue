@@ -1,7 +1,7 @@
 <template>
   <v-layout class="home">
     <v-row class="d-flex justify-center">
-      <v-col cols="4">
+      <v-col cols="12" lg="4" md="4" sm="12">
         <LoginForm class="login_box"/>
       </v-col>
     </v-row>

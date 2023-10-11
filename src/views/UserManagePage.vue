@@ -16,10 +16,13 @@
           :items-length="totalItems"
           :loading="loading"
           @update:options="loadUsers"
+          :height="height-250"
         >
           <template v-slot:item.actions="{ item }">
-            <v-btn @click="showUpdate(item.raw)" icon="mdi-pencil" variant="text"/>
-            <v-btn @click="updateUserAuth(item.raw)" icon="mdi-account-key" variant="text"/>
+            <v-row>
+              <v-btn @click="showUpdate(item.raw)" icon="mdi-pencil" variant="text"/>
+              <v-btn @click="updateUserAuth(item.raw)" icon="mdi-account-key" variant="text"/>
+            </v-row>
           </template>
         </v-data-table-server>
       </v-col>
@@ -41,7 +44,7 @@ export default {
     VDataTableServer
   },
   computed: {
-    selected () {
+    selected() {
       if (this.selectedUser == null) return null
       return {
         id: this.selectedUser.id,
@@ -60,6 +63,7 @@ export default {
       totalItems: 0,
       showDialog: false,
       selectedUser: null,
+      height: window.innerHeight,
       headers: [
         {title: 'id', key: 'id', sortable: false},
         {title: 'name', key: 'username', sortable: false},
@@ -73,11 +77,11 @@ export default {
     this.loadUsers({page: this.page, itemsPerPage: this.size})
   },
   methods: {
-    updateUserAuth(usr){
+    updateUserAuth(usr) {
       this.selectedUser = usr
       this.showDialog = true
     },
-    closeDialog(){
+    closeDialog() {
       this.showDialog = false
       this.loadUsers()
     },

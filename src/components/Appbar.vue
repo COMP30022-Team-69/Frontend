@@ -1,7 +1,7 @@
 <template>
   <v-app-bar app>
     <v-toolbar-title>
-      <v-btn icon="mdi-menu" @click="openSidebar"/>
+      <v-btn icon="mdi-menu" @click="openSidebar" v-if="showMenuButton"/>
       MUSIC LIBRARY
     </v-toolbar-title>
 
@@ -20,7 +20,9 @@ import {store} from "@/store";
 export default {
   components: {},
   data() {
-    return {};
+    return {
+      showMenuButton: true
+    };
   },
   methods: {
     openSidebar(){
@@ -40,6 +42,11 @@ export default {
       this.$router.push({path: '/login',})
     }
   },
+  watch:{
+    $route(to,from) {
+      this.showMenuButton = !(to.path === "/admin/song" || to.path === "/admin/user");
+    }
+  }
 };
 </script>
 

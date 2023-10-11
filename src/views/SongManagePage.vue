@@ -16,6 +16,7 @@
           :items-length="totalItems"
           :loading="loading"
           @update:options="loadSongs"
+          :height="height-250"
         >
           <template v-slot:item.actions="{ item }">
             <v-row>
@@ -54,6 +55,7 @@ export default {
       totalItems: 0,
       songSelected: null,
       showDialog: false,
+      height: window.innerHeight,
       headers: [
         {title: 'id', key: 'id', sortable: false},
         {title: 'title', key: 'name', sortable: false},
