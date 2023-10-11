@@ -36,22 +36,41 @@ export default {
     selectPlaylist(index) {
       const playlistNames = Object.keys(store.state.playlists);
       store.state.selectedPlaylist = playlistNames[index];
-      store.state.page = 1;
-      store.state.playlists[store.state.selectedPlaylist].songs = []
-      // if (store.state.selectedPlaylist === 'Main Library') {
-      //   song.getSongs(store.state.page, store.state.size, (songsFromApi) => {
-      //     store.state.playlists['Main Library'].songs = songsFromApi.data.records;
-      //   });
-      //   return;
-      // }
-      // song.getUserSongListById(store.state.page, store.state.size, store.state.selectedPlaylist, this.$route.query.id, (songsFromApi) => {
-      //   store.state.playlists[store.state.selectedPlaylist].songs = songsFromApi.data.records;
-      // });
     },
     initSongs() {
-      song.getSongs(store.state.page, store.state.size, (songsFromApi) => {
-        store.state.playlists['Main Library'].songs = songsFromApi.data.records;
+      store.state.page = 1
+      store.state.playlists = {
+        'Main Library': {
+          name: 'Main Library',
+          songs: []
+        },
+        'Favourite': {
+          name: 'Favourite',
+          songs: []
+        },
+        'Background': {
+          name: 'Background',
+          songs: []
+        },
+        'Relax': {
+          name: 'Relax',
+          songs: []
+        },
+        'Sleep': {
+          name: 'Sleep',
+          songs: []
+        }
+      }
+      if (store.state.selectedPlaylist === 'Main Library') {
+        song.getSongs(1, store.state.size, (songsFromApi) => {
+          store.state.playlists['Main Library'].songs = songsFromApi.data.records;
+        });
+        return;
+      }
+      song.getUserSongListById(1, store.state.size, store.state.selectedPlaylist, this.$route.query.id, (songsFromApi) => {
+        store.state.playlists[store.state.selectedPlaylist].songs = songsFromApi.data.records;
       });
+      this.$forceUpdate();
     }
   },
   created() {

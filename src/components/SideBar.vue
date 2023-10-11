@@ -42,7 +42,7 @@ export default {
   },
   computed: {
     showSidebar() {
-      if (this.$route.path === '/admin/user' || this.$route.path === '/admin/song') return false
+      if (this.$route.path === '/admin/user' || this.$route.path === '/admin/song' || this.$route.path === '/login' || this.$route.path === '/register') return false
       return !store.state.isMobile
     },
     greenReady() {

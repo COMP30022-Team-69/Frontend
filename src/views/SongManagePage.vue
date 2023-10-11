@@ -94,6 +94,8 @@ export default {
     },
     loadSongs({page, itemsPerPage, sortBy}) {
       this.loading = true
+      this.page = page
+      this.size = itemsPerPage
       song.getSongs(page, itemsPerPage, (res) => {
         this.userList = res.data.records
         this.totalItems = res.data.total
