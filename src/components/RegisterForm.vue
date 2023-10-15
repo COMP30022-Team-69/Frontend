@@ -34,6 +34,8 @@
       v-model="username"
       density="compact"
       placeholder="Username"
+      persistent-hint
+      hint="Use your full name as your username, don't include space"
       prepend-inner-icon="mdi-account-outline"
       variant="outlined"
       :rules="[rules.required, rules.usernameLength, rules.usernameValue]"
